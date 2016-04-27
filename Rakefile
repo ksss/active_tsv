@@ -1,2 +1,6 @@
 require "bundler/gem_tasks"
-task default: :spec
+
+task :test do
+  sh "bundle ex rgot -v"
+end
+task default: :test
