@@ -69,14 +69,12 @@ module ActiveTsv
       end
     end
 
-    def initialize(values = {})
-      @attrs = case values
-      when Hash
-        values
-      else
-        raise ArgumentError, "#{values.class} is not supported value"
+    def initialize(attrs = {})
+      unless attrs.kind_of?(Hash)
+        raise ArgumentError, "#{attrs.class} is not supported value"
       end
 
+      @attrs = attrs
       self.class.keys.each { |k| __send__ "#{k}=", @attrs[k] }
     end
 
