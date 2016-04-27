@@ -24,6 +24,7 @@ User.where(age: 30).where(name: "ksss").first #=> #<User {:id=>"1", :name=>"ksss
 Also Supported **CSV**.
 
 ```ruby
+require 'active_csv'
 class User < ActiveCsv::Base
   self.table_path = "data/users.csv"
 end
