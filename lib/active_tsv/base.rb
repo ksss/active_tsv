@@ -15,12 +15,27 @@ module ActiveTsv
       attr_reader :table_path
 
       def table_path=(path)
-        @table_path = path
+        reload(path)
+      end
+
+      def reload(path)
+        old_table_path = table_path
+        if @keys
+          keys.each do |k|
+            remove_method(k)
+            remove_method("#{k}=")
+          end
+        end
+
         @keys = nil
+        @table_path = path
         keys.each do |k|
           define_method(k) { @attrs[k] }
           define_method("#{k}=") { |v| @attrs[k] = v }
         end
+      rescue
+        reload(old_table_path)
+        raise
       end
 
       def each

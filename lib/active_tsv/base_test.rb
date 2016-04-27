@@ -5,6 +5,38 @@ module ActiveTsvTest
     self.table_path = "data/users.tsv"
   end
 
+  def test_s_table_path(t)
+    begin
+      User.class_eval do
+        self.table_path = nil
+      end
+    rescue TypeError
+    else
+      t.error("expect raise ArgumentError but nothing")
+    end
+
+    begin
+      User.class_eval do
+        self.table_path = 'a'
+      end
+    rescue Errno::ENOENT
+    else
+      t.error("expect raise ArgumentError but nothing")
+    end
+
+    User.class_eval do
+      self.table_path = "data/names.tsv"
+    end
+    unless User.first.name == "foo"
+      t.error("load error when table_path was changed")
+    end
+
+  ensure
+    User.class_eval do
+      self.table_path = "data/users.tsv"
+    end
+  end
+
   def test_initialize(t)
     u = User.new
     unless User === u
