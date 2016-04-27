@@ -37,6 +37,17 @@ module ActiveTsvTest
     end
   end
 
+  def test_s_all(t)
+    all = User.all
+    unless all.all? { |i| User === i }
+      t.error("unexpected classes")
+    end
+
+    unless all.length == 3
+      t.error("unexpected size")
+    end
+  end
+
   def test_initialize(t)
     u = User.new
     unless User === u

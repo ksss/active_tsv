@@ -47,6 +47,10 @@ module ActiveTsv
         end
       end
 
+      def all
+        to_a
+      end
+
       def last
         last_values = open { |f| f.to_a.last }
         new(keys.zip(last_values).to_h)
