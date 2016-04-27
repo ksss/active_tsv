@@ -38,7 +38,7 @@ module ActiveTsv
       end
 
       def open(&block)
-        CSV.open(File.expand_path(table_path), col_sep: self::SEPARATER, &block)
+        CSV.open(table_path, col_sep: self::SEPARATER, &block)
       end
 
       def keys
