@@ -16,6 +16,7 @@ module ActiveTsv
 
       def table_path=(path)
         @table_path = path
+        @keys = nil
         keys.each do |k|
           define_method(k) { @attrs[k] }
           define_method("#{k}=") { |v| @attrs[k] = v }
