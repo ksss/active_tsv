@@ -16,22 +16,6 @@ module RelationTest
     end
   end
 
-  def test_where_chain(t)
-    r = User.where.not(age: 29)
-    unless ActiveTsv::Relation === r
-      t.error("break return value #{r}")
-    end
-    a = r.to_a
-    unless a.length == 2
-      t.error("expect length 2 got #{a.length}")
-    end
-
-    u = r.where.not(name: "ksss").first
-    unless u && u.name == "bar" && u.age == "30"
-      t.error("expect \"bar\" got #{u.inspect}")
-    end
-  end
-
   def test_to_a(t)
     a = User.where(age: "30").to_a
     unless Array === a
