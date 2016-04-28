@@ -36,9 +36,9 @@ module ActiveTsv
       end
 
       def each
-        open do |f|
-          f.gets
-          f.each do |i|
+        open do |csv|
+          csv.gets
+          csv.each do |i|
             yield new(keys.zip(i).to_h)
           end
         end
@@ -49,7 +49,7 @@ module ActiveTsv
       end
 
       def last
-        last_values = open { |f| f.to_a.last }
+        last_values = open { |csv| csv.to_a.last }
         new(keys.zip(last_values).to_h)
       end
 
@@ -58,7 +58,7 @@ module ActiveTsv
       end
 
       def keys
-        @keys ||= open { |f| f.gets }.map(&:to_sym)
+        @keys ||= open { |csv| csv.gets }.map(&:to_sym)
       end
 
       def where(condition = nil)
