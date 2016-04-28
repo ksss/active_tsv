@@ -1,5 +1,7 @@
 # ActiveTsv
 
+[![Build Status](https://travis-ci.org/ksss/active_tsv.svg?branch=master)](https://travis-ci.org/ksss/active_tsv)
+
 ## Usage
 
 ```tsv
