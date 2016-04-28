@@ -7,8 +7,12 @@ module ActiveTsv
       @conditions = conditions
     end
 
-    def where(conditions)
-      self.class.new(@table, @conditions.merge(conditions))
+    def where(condition = nil)
+      if condition
+        self.class.new(@table, @conditions << Condition.new(:==, condition))
+      else
+        WhereChain.new(@table, @conditions)
+      end
     end
 
     def exist?
@@ -17,8 +21,10 @@ module ActiveTsv
 
     def first
       @table.find do |i|
-        @conditions.all? do |k, v|
-          i[k] == v.to_s
+        @conditions.all? do |cond|
+          cond.values.all? do |k, v|
+            i[k].__send__(cond.method_name, v.to_s)
+          end
         end
       end
     end
@@ -29,8 +35,10 @@ module ActiveTsv
 
     def to_a
       @table.select do |i|
-        @conditions.all? do |k, v|
-          i[k] == v.to_s
+        @conditions.all? do |cond|
+          cond.values.all? do |k, v|
+            i[k].__send__(cond.method_name, v.to_s)
+          end
         end
       end
     end

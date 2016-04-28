@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'csv'
-require "active_tsv/relation"
-
 module ActiveTsv
   # @example
   #   class User < ActiveTsv::Base
@@ -64,8 +61,12 @@ module ActiveTsv
         @keys ||= open { |f| f.gets }.map(&:to_sym)
       end
 
-      def where(conditions)
-        Relation.new(self, conditions)
+      def where(condition = nil)
+        if condition
+          Relation.new(self, [Condition.new(:==, condition)])
+        else
+          WhereChain.new(self, [])
+        end
       end
     end
 
