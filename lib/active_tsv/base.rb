@@ -75,7 +75,6 @@ module ActiveTsv
       end
 
       @attrs = attrs
-      self.class.keys.each { |k| __send__ "#{k}=", @attrs[k] }
     end
 
     def inspect
