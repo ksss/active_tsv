@@ -14,11 +14,18 @@ class User < ActiveTsv::Base
   self.table_path = "data/users.tsv"
 end
 
-User.first #=> #<User {:id=>"1", :name=>"ksss", :age=>"30"}>
-User.last #=> #<User {:id=>"3", :name=>"bar", :age=>"30"}>
-User.where(age: 30).to_a #=> [#<User {:id=>"1", :name=>"ksss", :age=>"30"}>, #<User {:id=>"3", :name=>"bar", :age=>"30"}>]
-User.where(age: 30).last #=> #<User {:id=>"3", :name=>"bar", :age=>"30"}>
-User.where(age: 30).where(name: "ksss").first #=> #<User {:id=>"1", :name=>"ksss", :age=>"30"}>
+User.first
+#=> #<User {:id=>"1", :name=>"ksss", :age=>"30"}>
+User.last
+#=> #<User {:id=>"3", :name=>"bar", :age=>"30"}>
+User.where(age: 30).to_a
+#=> [#<User {:id=>"1", :name=>"ksss", :age=>"30"}>, #<User {:id=>"3", :name=>"bar", :age=>"30"}>]
+User.where(age: 30).last
+#=> #<User {:id=>"3", :name=>"bar", :age=>"30"}>
+User.where(age: 30).where(name: "ksss").first
+#=> #<User {:id=>"1", :name=>"ksss", :age=>"30"}>
+User.where.not(name: "ksss").first
+#=> #<User {:id=>"2", :name=>"foo", :age=>"29"}>
 ```
 
 Also Supported **CSV**.
