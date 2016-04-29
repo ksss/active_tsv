@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["ksss"]
   spec.email         = ["co000ri@gmail.com"]
 
-  spec.summary       = "Class of Active record pattern for TSV/CSV"
-  spec.description   = "Class of Active record pattern for TSV/CSV"
+  spec.summary       = "A Class of Active record pattern for TSV/CSV"
+  spec.description   = "A Class of Active record pattern for TSV/CSV"
   spec.homepage      = "https://github.com/ksss/active_tsv"
   spec.license       = "MIT"
 

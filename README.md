@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/ksss/active_tsv.svg?branch=master)](https://travis-ci.org/ksss/active_tsv)
 
+A Class of Active record pattern for TSV/CSV
+
 ## Usage
 
 ```tsv
