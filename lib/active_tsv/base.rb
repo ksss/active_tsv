@@ -44,8 +44,8 @@ module ActiveTsv
       end
 
       def last
-        last_values = open { |csv| csv.to_a.last }
-        new(keys.zip(last_values).to_h)
+        last_value = open { |csv| csv.to_a.last }
+        new(keys.zip(last_value).to_h)
       end
 
       def open(&block)
