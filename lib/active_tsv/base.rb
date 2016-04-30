@@ -8,7 +8,6 @@ module ActiveTsv
   class Base
     SEPARATER = "\t"
     class << self
-      include Enumerable
       attr_reader :table_path
 
       def table_path=(path)
@@ -33,15 +32,6 @@ module ActiveTsv
       rescue
         reload(old_table_path)
         raise
-      end
-
-      def each
-        open do |csv|
-          csv.gets
-          csv.each do |i|
-            yield new(keys.zip(i).to_h)
-          end
-        end
       end
 
       def all
