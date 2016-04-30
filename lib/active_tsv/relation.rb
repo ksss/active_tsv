@@ -22,18 +22,18 @@ module ActiveTsv
     def first
       keys = @table.keys
       key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
-      values = @table.open { |csv|
+      value = @table.open { |csv|
         csv.gets
-        csv.find do |values|
+        csv.find do |value|
           @conditions.all? do |cond|
             cond.values.all? do |k, v|
-              values[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
+              value[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
             end
           end
         end
       }
-      if values
-        @table.new(@table.keys.zip(values).to_h)
+      if value
+        @table.new(@table.keys.zip(value).to_h)
       else
         nil
       end
