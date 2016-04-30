@@ -17,7 +17,7 @@ module ActiveTsv
       end
     end
 
-    def exist?
+    def exists?
       !first.nil?
     end
 
