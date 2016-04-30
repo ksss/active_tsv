@@ -1,11 +1,11 @@
 require 'active_tsv'
 require 'benchmark'
 
-module ActiveTsvTest
-  def benchmark_where(b)
+module ActiveTsvBenchmarkTest
+  def run_with_temp_table(n)
     Tempfile.create(["", ".tsv"]) do |f|
       f.puts [*'a'..'z'].join("\t")
-      10000.times do |i|
+      n.times do |i|
         f.puts [*1..26].map{ |j| i * j }.join("\t")
       end
       bench_klass = Class.new(ActiveTsv::Base) do
@@ -13,10 +13,14 @@ module ActiveTsvTest
       end
       f.flush
 
-      b.reset_timer
+      yield bench_klass, n / 2
+    end
+  end
 
+  def benchmark_where(b)
+    run_with_temp_table(10000) do |bench_klass, n|
+      b.reset_timer
       i = 0
-      n = 5000
       while i < b.n
         bench_klass.where(a: 1 * n, b: 2 * n, c: 3 * n)
                    .where(d: 4 * n, e: 5 * n, f: 6 * n)
