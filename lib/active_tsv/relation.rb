@@ -46,6 +46,8 @@ module ActiveTsv
     end
 
     def each
+      return to_enum(:each) unless block_given?
+
       keys = @table.keys
       key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
       values = @table.open { |csv|

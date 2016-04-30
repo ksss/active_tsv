@@ -16,6 +16,19 @@ module RelationTest
     end
   end
 
+  def test_each(t)
+    r = User.where(age: 30)
+    r.each do |u|
+      unless User === u
+        t.error("break iterate item")
+      end
+    end
+
+    unless Enumerator === r.each
+      t.error("break return value")
+    end
+  end
+
   def test_to_a(t)
     a = User.where(age: "30").to_a
     unless Array === a

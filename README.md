@@ -22,6 +22,9 @@ User.first
 #=> #<User {:id=>"1", :name=>"ksss", :age=>"30"}>
 User.last
 #=> #<User {:id=>"3", :name=>"bar", :age=>"30"}>
+User.where(age: 30).each do |user|
+  user.name #=> "ksss", "bar"
+end
 User.where(age: 30).to_a
 #=> [#<User {:id=>"1", :name=>"ksss", :age=>"30"}>, #<User {:id=>"3", :name=>"bar", :age=>"30"}>]
 User.where(age: 30).last
