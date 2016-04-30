@@ -44,12 +44,20 @@ module ActiveTsv
     end
 
     def to_a
-      @table.select do |i|
-        @conditions.all? do |cond|
-          cond.values.all? do |k, v|
-            i[k].__send__(cond.method_name, v.to_s)
+      keys = @table.keys
+      key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
+      values = @table.open { |csv|
+        csv.gets
+        csv.select do |value|
+          @conditions.all? do |cond|
+            cond.values.all? do |k, v|
+              value[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
+            end
           end
         end
+      }
+      values.map do |value|
+        @table.new(@table.keys.zip(value).to_h)
       end
     end
   end
