@@ -2,6 +2,8 @@
 
 module ActiveTsv
   class Relation
+    include Enumerable
+
     def initialize(table, conditions)
       @table = table
       @conditions = conditions
@@ -43,7 +45,7 @@ module ActiveTsv
       to_a.last
     end
 
-    def to_a
+    def each
       keys = @table.keys
       key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
       values = @table.open { |csv|
@@ -57,7 +59,7 @@ module ActiveTsv
         end
       }
       values.map do |value|
-        @table.new(@table.keys.zip(value).to_h)
+        yield @table.new(@table.keys.zip(value).to_h)
       end
     end
   end
