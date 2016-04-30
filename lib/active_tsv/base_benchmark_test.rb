@@ -35,4 +35,15 @@ module ActiveTsvBenchmarkTest
       end
     end
   end
+
+  def benchmark_to_a(b)
+    run_with_temp_table(1000) do |bench_klass, n|
+      b.reset_timer
+      i = 0
+      while i < b.n
+        bench_klass.where(a: 1 * n).to_a
+        i += 1
+      end
+    end
+  end
 end
