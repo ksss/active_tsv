@@ -48,6 +48,11 @@ module ActiveTsv
         Relation.new(self, [])
       end
 
+      def first
+        first_value = open { |csv| csv.gets; csv.gets }
+        new(keys.zip(first_value).to_h)
+      end
+
       def last
         last_values = open { |csv| csv.to_a.last }
         new(keys.zip(last_values).to_h)
