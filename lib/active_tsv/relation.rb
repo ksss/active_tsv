@@ -20,12 +20,22 @@ module ActiveTsv
     end
 
     def first
-      @table.find do |i|
-        @conditions.all? do |cond|
-          cond.values.all? do |k, v|
-            i[k].__send__(cond.method_name, v.to_s)
+      keys = @table.keys
+      key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
+      values = @table.open { |csv|
+        csv.gets
+        csv.find do |values|
+          @conditions.all? do |cond|
+            cond.values.all? do |k, v|
+              values[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
+            end
           end
         end
+      }
+      if values
+        @table.new(@table.keys.zip(values).to_h)
+      else
+        nil
       end
     end
 
