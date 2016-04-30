@@ -38,7 +38,12 @@ module ActiveTsvTest
   end
 
   def test_s_all(t)
-    all = User.all
+    r = User.all
+    unless ActiveTsv::Relation === r
+      t.error("break return value")
+    end
+
+    all = r.to_a
     unless all.all? { |i| User === i }
       t.error("unexpected classes")
     end

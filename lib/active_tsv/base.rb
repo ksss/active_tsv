@@ -45,7 +45,7 @@ module ActiveTsv
       end
 
       def all
-        to_a
+        Relation.new(self, [])
       end
 
       def last
