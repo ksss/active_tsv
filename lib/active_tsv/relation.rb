@@ -60,7 +60,7 @@ module ActiveTsv
           end
         end
       }
-      values.map do |value|
+      values.each do |value|
         yield @table.new(@table.keys.zip(value).to_h)
       end
     end
