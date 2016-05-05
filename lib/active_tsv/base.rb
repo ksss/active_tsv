@@ -86,9 +86,7 @@ module ActiveTsv
     end
 
     def to_h
-      h = {}
-      self.class.keys.map { |k| h[k] = __send__ k }
-      h
+      @attrs.dup
     end
   end
 end
