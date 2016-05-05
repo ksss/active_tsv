@@ -122,4 +122,14 @@ module ActiveTsvTest
       end
     end
   end
+
+  def test_count(t)
+    unless User.count === 3
+      t.error("all count expect 3")
+    end
+
+    unless User.where(age: 30).count == 2
+      t.error("where(age: 30) count expect 2")
+    end
+  end
 end

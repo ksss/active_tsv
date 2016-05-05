@@ -63,6 +63,10 @@ module ActiveTsv
           WhereChain.new(self, [])
         end
       end
+
+      def count
+        all.count
+      end
     end
 
     def initialize(attrs = {})
