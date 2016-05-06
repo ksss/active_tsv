@@ -49,7 +49,7 @@ end
 
 ## Goal
 
-Support all methods that like ActiveRecord
+Support all methods of ActiveRecord
 
 ## Installation
 
