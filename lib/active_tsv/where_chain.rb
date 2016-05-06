@@ -1,8 +1,7 @@
 module ActiveTsv
   class WhereChain
-    def initialize(table, conditions)
-      @table = table
-      @conditions = conditions
+    def initialize(relation)
+      @relation = relation
     end
 
     def not(condition)
