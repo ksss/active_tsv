@@ -6,6 +6,8 @@ A Class of Active record pattern for TSV/CSV
 
 ## Usage
 
+data/users.tsv
+
 ```tsv
 id	name	age
 1	ksss	30
@@ -14,6 +16,7 @@ id	name	age
 ```
 
 ```ruby
+require 'active_tsv'
 class User < ActiveTsv::Base
   self.table_path = "data/users.tsv"
 end
