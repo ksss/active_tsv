@@ -8,11 +8,12 @@ module ActiveTsvBenchmarkTest
       n.times do |i|
         f.puts [*1..26].map{ |j| (i+1) * j }.join("\t")
       end
+
+      f.close
+
       bench_klass = Class.new(ActiveTsv::Base) do
         self.table_path = f.path
       end
-      f.flush
-
       yield bench_klass, n / 2
     end
   end
