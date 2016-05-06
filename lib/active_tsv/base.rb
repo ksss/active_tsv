@@ -44,8 +44,13 @@ module ActiveTsv
       end
 
       def last
-        last_value = open { |csv| csv.to_a.last }
-        new(keys.zip(last_value).to_h)
+        last_value = File.open(table_path) do |f|
+          while line = f.gets
+            before = line
+          end
+          before.chomp
+        end
+        new(keys.zip(CSV.new(last_value, col_sep: self::SEPARATER).shift).to_h)
       end
 
       def open(&block)
