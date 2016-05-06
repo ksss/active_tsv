@@ -46,4 +46,27 @@ module ActiveTsvBenchmarkTest
       end
     end
   end
+
+  def benchmark_active_tsv_each(b)
+    run_with_temp_table(100) do |bench_klass, n|
+      r = bench_klass.all
+      b.reset_timer
+      i = 0
+      while i < b.n
+        r.each {}
+        i += 1
+      end
+    end
+  end
+
+  def benchmark_csv_each(b)
+    run_with_temp_table(100) do |bench_klass, n|
+      b.reset_timer
+      i = 0
+      while i < b.n
+        CSV.open(bench_klass.table_path, col_sep: "\t".freeze).each {}
+        i += 1
+      end
+    end
+  end
 end
