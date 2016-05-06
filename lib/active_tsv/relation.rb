@@ -9,6 +9,7 @@ module ActiveTsv
     def initialize(model, where_values, order_values = [])
       @model = model
       @where_values = where_values
+      @order_values = order_values
     end
 
     def where(where_value = nil)
@@ -29,9 +30,23 @@ module ActiveTsv
       to_a.last
     end
 
+    def order(*columns)
+      @order_values += columns
+      self
+    end
+
     def each
       return to_enum(:each) unless block_given?
 
+      if @order_values.empty?.!
+        v = @order_values.dup
+        @order_values.clear
+        return sort_by { |i|
+          v.map { |m| i[m] }.join('-')
+        }.each { |i|
+          yield i
+        }
+      end
       keys = @model.keys
       key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
       @model.open do |csv|

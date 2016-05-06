@@ -38,4 +38,20 @@ module RelationTest
       t.error("expect length 2 got #{a.length}")
     end
   end
+
+  def test_order(t)
+    r = User.order(:age, :name)
+    unless ActiveTsv::Relation === r
+      t.error("break return value")
+    end
+
+    unless r.to_a.map(&:name) == ["foo", "bar", "ksss"]
+      t.error("miss order")
+    end
+
+    unless User.order(:name).where.not(age: 29).map(&:name) == User.where.not(age: 29).order(:name).map(&:name)
+      t.error("expect match order where.order and order.where")
+      t.log(User.order(:name).where.not(age: 29).map(&:name), User.where.not(age: 29).order(:name).map(&:name))
+    end
+  end
 end

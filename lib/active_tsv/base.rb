@@ -75,6 +75,10 @@ module ActiveTsv
       def count
         all.count
       end
+
+      def order(*columns)
+        all.order(*columns)
+      end
     end
 
     def initialize(attrs = {})
