@@ -54,4 +54,15 @@ module RelationTest
       t.log(User.order(:name).where.not(age: 29).map(&:name), User.where.not(age: 29).order(:name).map(&:name))
     end
   end
+
+  def test_order_reorderable(t)
+    r = User.order(:name).where.not(age: 29)
+    first_last = nil
+    r.each { |i| first_last = i }
+    second_last = nil
+    r.each { |i| second_last = i }
+    unless first_last.name == second_last.name
+      t.error("break order_values")
+    end
+  end
 end

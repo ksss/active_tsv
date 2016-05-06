@@ -35,28 +35,29 @@ module ActiveTsv
       self
     end
 
-    def each
-      return to_enum(:each) unless block_given?
+    def each(*args, &block)
+      to_a.each(*args, &block)
+    end
 
-      if @order_values.empty?.!
-        v = @order_values.dup
-        @order_values.clear
-        return sort_by { |i|
-          v.map { |m| i[m] }.join('-')
-        }.each { |i|
-          yield i
-        }
-      end
+    def to_a
+      ret = []
       keys = @model.keys
       key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
       @model.open do |csv|
         csv.gets
         csv.each do |value|
-          yield @model.new(keys.zip(value).to_h) if @where_values.all? { |cond|
+          ret << @model.new(keys.zip(value).to_h) if @where_values.all? { |cond|
             cond.values.all? do |k, v|
               value[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
             end
           }
+        end
+      end
+      if @order_values.empty?
+        ret
+      else
+        ret.sort_by do |i|
+          @order_values.map { |m| i[m] }.join('-')
         end
       end
     end
