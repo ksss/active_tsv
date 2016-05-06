@@ -13,7 +13,9 @@ module ActiveTsv
 
     def where(where_value = nil)
       if where_value
-        self.class.new(@model, @where_values << Condition.new(:==, where_value), @order_values)
+        dup.tap do |r|
+          r.where_values << Condition.new(:==, where_value)
+        end
       else
         WhereChain.new(dup)
       end
