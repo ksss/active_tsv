@@ -62,11 +62,7 @@ module ActiveTsv
       end
 
       def where(condition = nil)
-        if condition
-          Relation.new(self, [Condition.new(:==, condition)])
-        else
-          WhereChain.new(self, [])
-        end
+        all.where(condition)
       end
 
       def count
