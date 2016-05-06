@@ -6,7 +6,7 @@ module ActiveTsvBenchmarkTest
     Tempfile.create(["", ".tsv"]) do |f|
       f.puts [*'a'..'z'].join("\t")
       n.times do |i|
-        f.puts [*1..26].map{ |j| i * j }.join("\t")
+        f.puts [*1..26].map{ |j| (i+1) * j }.join("\t")
       end
       bench_klass = Class.new(ActiveTsv::Base) do
         self.table_path = f.path
@@ -48,7 +48,7 @@ module ActiveTsvBenchmarkTest
   end
 
   def benchmark_last(b)
-    run_with_temp_table(1000) do |bench_klass, n|
+    run_with_temp_table(5000) do |bench_klass, n|
       b.reset_timer
       i = 0
       while i < b.n
