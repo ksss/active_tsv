@@ -17,7 +17,6 @@ module ActiveTsv
       end
 
       def reload(path)
-        old_table_path = table_path
         if @keys
           keys.each do |k|
             remove_method(k)
@@ -31,9 +30,6 @@ module ActiveTsv
           define_method(k) { @attrs[k] }
           define_method("#{k}=") { |v| @attrs[k] = v }
         end
-      rescue
-        reload(old_table_path)
-        raise
       end
 
       def all
