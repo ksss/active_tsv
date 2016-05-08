@@ -60,24 +60,31 @@ module ActiveTsv
     end
 
     def to_a
-      ret = []
-      keys = @model.keys
-      key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
-      @model.open do |csv|
-        csv.gets
-        csv.each do |value|
-          ret << @model.new(keys.zip(value).to_h) if @where_values.all? { |cond|
-            cond.values.all? do |k, v|
-              value[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
-            end
-          }
-        end
-      end
+      ret = each_yield.to_a
       if @order_values.empty?
         ret
       else
         ret.sort_by do |i|
           @order_values.map { |m| i[m] }.join('-')
+        end
+      end
+    end
+
+    private
+
+    def each_yield
+      return to_enum(:each_yield) unless block_given?
+
+      keys = @model.keys
+      key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
+      @model.open do |csv|
+        csv.gets
+        csv.each do |value|
+          yield @model.new(keys.zip(value).to_h) if @where_values.all? { |cond|
+            cond.values.all? do |k, v|
+              value[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
+            end
+          }
         end
       end
     end
