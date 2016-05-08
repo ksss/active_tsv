@@ -137,5 +137,8 @@ module ActiveTsvTest
     unless User.first == User.first
       t.error("expect same object")
     end
+    unless User.first.eql?(User.first)
+      t.error("expect same object")
+    end
   end
 end
