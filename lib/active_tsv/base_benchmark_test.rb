@@ -48,6 +48,17 @@ module ActiveTsvBenchmarkTest
     end
   end
 
+  def benchmark_relation_first(b)
+    run_with_temp_table(5000) do |bench_klass, n|
+      b.reset_timer
+      i = 0
+      while i < b.n
+        bench_klass.where(a: 1).first
+        i += 1
+      end
+    end
+  end
+
   def benchmark_last(b)
     run_with_temp_table(5000) do |bench_klass, n|
       b.reset_timer
