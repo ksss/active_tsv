@@ -36,8 +36,7 @@ module ActiveTsv
       end
 
       def first
-        first_value = open { |csv| csv.gets; csv.gets }
-        new(keys.zip(first_value).to_h)
+        all.first
       end
 
       def last

@@ -26,6 +26,15 @@ module ActiveTsv
       !first.nil?
     end
 
+    def first
+      if @where_values.empty?
+        first_value = @model.open { |csv| csv.gets; csv.gets }
+        @model.new(@model.keys.zip(first_value).to_h)
+      else
+        each_yield.first
+      end
+    end
+
     BUF_SIZE = 1024
 
     def last
