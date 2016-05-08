@@ -7,7 +7,6 @@ module ActiveTsv
   #   end
   class Base
     SEPARATER = "\t"
-    BUF_SIZE = 1024
 
     class << self
       attr_reader :table_path
@@ -42,22 +41,7 @@ module ActiveTsv
       end
 
       def last
-        last_value = File.open(table_path) do |f|
-          f.seek(0, IO::SEEK_END)
-          size = f.size
-          buf_size = [size, self::BUF_SIZE].min
-          while true
-            f.seek(-buf_size, IO::SEEK_CUR)
-            buf = f.read(buf_size)
-            if index = buf.rindex($INPUT_RECORD_SEPARATOR, -2)
-              f.seek(-buf_size + index + 1, IO::SEEK_CUR)
-              break f.read.chomp
-            else
-              f.seek(-buf_size, IO::SEEK_CUR)
-            end
-          end
-        end
-        new(keys.zip(CSV.new(last_value, col_sep: self::SEPARATER).shift).to_h)
+        all.last
       end
 
       def open(&block)

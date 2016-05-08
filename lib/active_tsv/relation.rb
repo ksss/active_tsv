@@ -26,8 +26,28 @@ module ActiveTsv
       !first.nil?
     end
 
+    BUF_SIZE = 1024
+
     def last
-      to_a.last
+      if @where_values.empty?
+        last_value = File.open(@model.table_path) do |f|
+          f.seek(0, IO::SEEK_END)
+          buf_size = [f.size, self.class::BUF_SIZE].min
+          while true
+            f.seek(-buf_size, IO::SEEK_CUR)
+            buf = f.read(buf_size)
+            if index = buf.rindex($INPUT_RECORD_SEPARATOR, -2)
+              f.seek(-buf_size + index + 1, IO::SEEK_CUR)
+              break f.read.chomp
+            else
+              f.seek(-buf_size, IO::SEEK_CUR)
+            end
+          end
+        end
+        @model.new(@model.keys.zip(CSV.new(last_value, col_sep: @model::SEPARATER).shift).to_h)
+      else
+        to_a.last
+      end
     end
 
     def order(*columns)
