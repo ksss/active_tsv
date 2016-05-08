@@ -59,6 +59,10 @@ module ActiveTsv
       end
     end
 
+    def take(n = nil)
+      n ? each_yield.take(n) : first
+    end
+
     def order(*columns)
       @order_values += columns
       self

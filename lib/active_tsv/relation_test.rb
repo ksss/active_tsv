@@ -65,4 +65,15 @@ module RelationTest
       t.error("break order_values")
     end
   end
+
+  def test_take(t)
+    r = User.all
+    unless r.take(2).length == 2
+      t.error("take(2) expect get length 2")
+    end
+
+    unless r.take.name == "ksss"
+      t.error("take expect like first")
+    end
+  end
 end

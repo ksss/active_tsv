@@ -43,6 +43,10 @@ module ActiveTsv
         all.last
       end
 
+      def take(*args)
+        all.take(*args)
+      end
+
       def open(&block)
         CSV.open(table_path, col_sep: self::SEPARATER, &block)
       end
