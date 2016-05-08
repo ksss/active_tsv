@@ -132,4 +132,10 @@ module ActiveTsvTest
       t.error("where(age: 30) count expect 2")
     end
   end
+
+  def test_equal(t)
+    unless User.first == User.first
+      t.error("expect same object")
+    end
+  end
 end

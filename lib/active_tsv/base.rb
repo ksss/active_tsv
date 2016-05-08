@@ -91,5 +91,9 @@ module ActiveTsv
     def to_h
       @attrs.dup
     end
+
+    def ==(other)
+      super || other.instance_of?(self.class) && to_h == other.to_h
+    end
   end
 end
