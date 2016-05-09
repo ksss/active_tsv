@@ -39,6 +39,10 @@ module ActiveTsv
         Relation.new(self)
       end
 
+      def scope(name, proc)
+        define_singleton_method(name, &proc)
+      end
+
       def open(&block)
         CSV.open(table_path, col_sep: self::SEPARATER, &block)
       end

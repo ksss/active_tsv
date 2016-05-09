@@ -3,6 +3,18 @@ require 'active_tsv'
 module ActiveTsvBaseTest
   class User < ActiveTsv::Base
     self.table_path = "data/users.tsv"
+    scope :thirty, -> { where(age: 30) }
+    scope :age, ->(a) { where(age: a) }
+  end
+
+  def test_s_scope(t)
+    unless User.thirty.to_a == User.where(age: 30).to_a
+      t.error("named scope not expected behavior")
+    end
+
+    unless User.age(29) == User.where(age: 29)
+      t.error("foo")
+    end
   end
 
   def test_s_table_path(t)
