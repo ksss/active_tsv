@@ -22,6 +22,12 @@ module ActiveTsv
       copy.group_values = group_values.dup
     end
 
+    def ==(other)
+      where_values == other.where_values &&
+        order_values == other.order_values &&
+        group_values == other.group_values
+    end
+
     def where(where_value = nil)
       if where_value
         dup.tap do |r|

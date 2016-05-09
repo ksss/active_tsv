@@ -16,6 +16,15 @@ module ActiveTsvRelationTest
     end
   end
 
+  def test_equal(t)
+    unless User.all == User.all
+      t.error("expect same")
+    end
+    unless User.where.not(age: 30).where(name: 'ksss') == User.where.not(age: 30).where(name: 'ksss')
+      t.error("expect same")
+    end
+  end
+
   def test_where_scope(t)
     r = User.all
     r1 = r.where(age: 30)
