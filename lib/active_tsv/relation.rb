@@ -68,6 +68,7 @@ module ActiveTsv
 
     def order(*columns)
       @order_values += columns
+      @order_values.uniq!
       self
     end
 
