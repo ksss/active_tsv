@@ -1,6 +1,6 @@
 require 'active_tsv'
 
-module WhereChainTest
+module ActiveTsvWhereChainTest
   class User < ActiveTsv::Base
     self.table_path = "data/users.tsv"
   end

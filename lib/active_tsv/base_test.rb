@@ -1,6 +1,6 @@
 require 'active_tsv'
 
-module ActiveTsvTest
+module ActiveTsvBaseTest
   class User < ActiveTsv::Base
     self.table_path = "data/users.tsv"
   end

@@ -1,6 +1,6 @@
 require 'active_tsv'
 
-module RelationTest
+module ActiveTsvRelationTest
   class User < ActiveTsv::Base
     self.table_path = "data/users.tsv"
   end
