@@ -43,18 +43,22 @@ module ActiveTsv
     end
 
     def first
-      if @where_values.empty?
-        first_value = @model.open { |csv| csv.gets; csv.gets }
-        @model.new(@model.keys.zip(first_value).to_h)
+      if @order_values.empty?
+        if @where_values.empty?
+          first_value = @model.open { |csv| csv.gets; csv.gets }
+          @model.new(@model.keys.zip(first_value).to_h)
+        else
+          each_yield.first
+        end
       else
-        each_yield.first
+        to_a.first
       end
     end
 
     BUF_SIZE = 1024
 
     def last
-      if @where_values.empty?
+      if @where_values.empty? && @order_values.empty?
         last_value = File.open(@model.table_path) do |f|
           f.seek(0, IO::SEEK_END)
           buf_size = [f.size, self.class::BUF_SIZE].min

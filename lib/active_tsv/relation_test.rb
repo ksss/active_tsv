@@ -77,6 +77,15 @@ module ActiveTsvRelationTest
     end
   end
 
+  def test_ordered_first_and_last(t)
+    unless User.order(:name).first.name == "bar"
+      t.error("first record didn't change by order")
+    end
+    unless User.order(:name).last.name == "ksss"
+      t.error("last record didn't change by order")
+    end
+  end
+
   def test_order_reorderable(t)
     r = User.order(:name).where.not(age: 29)
     first_last = nil
