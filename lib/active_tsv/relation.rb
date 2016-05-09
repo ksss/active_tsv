@@ -5,7 +5,7 @@ module ActiveTsv
     include Enumerable
 
     attr_reader :model
-    attr_reader :where_values
+    attr_accessor :where_values
     def initialize(model, where_values, order_values = [])
       @model = model
       @where_values = where_values
@@ -15,7 +15,7 @@ module ActiveTsv
     def where(where_value = nil)
       if where_value
         dup.tap do |r|
-          r.where_values << Condition.new(:==, where_value)
+          r.where_values = r.where_values.dup << Condition.new(:==, where_value)
         end
       else
         WhereChain.new(dup)

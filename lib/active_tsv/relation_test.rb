@@ -16,6 +16,19 @@ module RelationTest
     end
   end
 
+  def test_where_scope(t)
+    r = User.all
+    r1 = r.where(age: 30)
+    r2 = r.where(name: 'ksss')
+    unless r1.to_a.length == 2
+      t.error("expect keep scope but dose not")
+    end
+
+    unless r2.to_a.length == 1
+      t.error("expect keep scope but dose not")
+    end
+  end
+
   def test_each(t)
     r = User.where(age: 30)
     r.each do |u|
