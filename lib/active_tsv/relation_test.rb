@@ -108,6 +108,16 @@ module ActiveTsvRelationTest
     end
   end
 
+  def test_take_with_order(t)
+    unless User.order(:name).take(2).map(&:name) == ["bar", "foo"]
+      t.error("`take` should consider order")
+    end
+
+    unless User.order(:name).take.name == "bar"
+      t.error("`take` should consider order")
+    end
+  end
+
   def test_group(t)
     r = User.all
     unless r.count == 3

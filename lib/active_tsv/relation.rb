@@ -80,7 +80,15 @@ module ActiveTsv
     end
 
     def take(n = nil)
-      n ? each_yield.take(n) : first
+      if n
+        if @order_values.empty?
+          each_yield.take(n)
+        else
+          to_a.take(n)
+        end
+      else
+        first
+      end
     end
 
     def count
