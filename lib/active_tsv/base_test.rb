@@ -83,7 +83,7 @@ module ActiveTsvBaseTest
 
     [
       -> { User.new(1) },
-      -> { User.new([1]) },
+      -> { User.new(nil) },
     ].each do |block|
       begin
         block.call

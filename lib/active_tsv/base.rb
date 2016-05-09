@@ -53,11 +53,14 @@ module ActiveTsv
     end
 
     def initialize(attrs = {})
-      unless attrs.kind_of?(Hash)
+      case attrs
+      when Hash
+        @attrs = attrs
+      when Array
+        @attrs = self.class.keys.zip(attrs).to_h
+      else
         raise ArgumentError, "#{attrs.class} is not supported value"
       end
-
-      @attrs = attrs
     end
 
     def inspect

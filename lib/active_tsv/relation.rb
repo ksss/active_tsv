@@ -46,7 +46,7 @@ module ActiveTsv
       if @order_values.empty?
         if @where_values.empty?
           first_value = @model.open { |csv| csv.gets; csv.gets }
-          @model.new(@model.keys.zip(first_value).to_h)
+          @model.new(first_value)
         else
           each_yield.first
         end
@@ -73,7 +73,7 @@ module ActiveTsv
             end
           end
         end
-        @model.new(@model.keys.zip(CSV.new(last_value, col_sep: @model::SEPARATER).shift).to_h)
+        @model.new(CSV.new(last_value, col_sep: @model::SEPARATER).shift)
       else
         to_a.last
       end
@@ -139,12 +139,11 @@ module ActiveTsv
     def each_yield
       return to_enum(:each_yield) unless block_given?
 
-      keys = @model.keys
-      key_to_value_index = keys.each_with_index.map { |k, index| [k, index] }.to_h
+      key_to_value_index = @model.keys.each_with_index.map { |k, index| [k, index] }.to_h
       @model.open do |csv|
         csv.gets
         csv.each do |value|
-          yield @model.new(keys.zip(value).to_h) if @where_values.all? { |cond|
+          yield @model.new(value) if @where_values.all? { |cond|
             cond.values.all? do |k, v|
               value[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
             end
