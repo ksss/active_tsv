@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'active_tsv/querying'
+
 module ActiveTsv
   # @example
   #   class User < ActiveTsv::Base
@@ -35,17 +37,7 @@ module ActiveTsv
         Relation.new(self, [])
       end
 
-      def first
-        all.first
-      end
-
-      def last
-        all.last
-      end
-
-      def take(*args)
-        all.take(*args)
-      end
+      include Querying
 
       def open(&block)
         CSV.open(table_path, col_sep: self::SEPARATER, &block)
@@ -53,18 +45,6 @@ module ActiveTsv
 
       def keys
         @keys ||= open { |csv| csv.gets }.map(&:to_sym)
-      end
-
-      def where(condition = nil)
-        all.where(condition)
-      end
-
-      def count
-        all.count
-      end
-
-      def order(*columns)
-        all.order(*columns)
       end
     end
 
