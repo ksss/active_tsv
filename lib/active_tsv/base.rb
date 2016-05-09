@@ -36,7 +36,7 @@ module ActiveTsv
       end
 
       def all
-        Relation.new(self, [])
+        Relation.new(self)
       end
 
       def open(&block)

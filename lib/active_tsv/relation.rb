@@ -6,16 +6,19 @@ module ActiveTsv
 
     attr_reader :model
     attr_accessor :where_values
-    def initialize(model, where_values, order_values = [])
+    attr_accessor :order_values
+
+    def initialize(model)
       @model = model
-      @where_values = where_values
-      @order_values = order_values
+      @where_values = []
+      @order_values = []
     end
 
     def where(where_value = nil)
       if where_value
         dup.tap do |r|
           r.where_values = r.where_values.dup << Condition.new(:==, where_value)
+          r.order_values = r.order_values.dup
         end
       else
         WhereChain.new(dup)
