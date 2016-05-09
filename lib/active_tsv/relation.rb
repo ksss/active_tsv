@@ -16,12 +16,16 @@ module ActiveTsv
       @group_values = []
     end
 
+    def initialize_copy(copy)
+      copy.where_values = where_values.dup
+      copy.order_values = order_values.dup
+      copy.group_values = group_values.dup
+    end
+
     def where(where_value = nil)
       if where_value
         dup.tap do |r|
-          r.where_values = r.where_values.dup << Condition.new(:==, where_value)
-          r.order_values = r.order_values.dup
-          r.group_values = r.group_values.dup
+          r.where_values << Condition.new(:==, where_value)
         end
       else
         WhereChain.new(dup)
