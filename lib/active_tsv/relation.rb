@@ -7,11 +7,13 @@ module ActiveTsv
     attr_reader :model
     attr_accessor :where_values
     attr_accessor :order_values
+    attr_accessor :group_values
 
     def initialize(model)
       @model = model
       @where_values = []
       @order_values = []
+      @group_values = []
     end
 
     def where(where_value = nil)
@@ -19,6 +21,7 @@ module ActiveTsv
         dup.tap do |r|
           r.where_values = r.where_values.dup << Condition.new(:==, where_value)
           r.order_values = r.order_values.dup
+          r.group_values = r.group_values.dup
         end
       else
         WhereChain.new(dup)
@@ -66,9 +69,31 @@ module ActiveTsv
       n ? each_yield.take(n) : first
     end
 
+    def count
+      if @group_values.empty?
+        super
+      else
+        h = if @group_values.one?
+          group_by { |i| i[@group_values.first] }
+        else
+          group_by { |i| @group_values.map { |c| i[c] } }
+        end
+        h.each do |k, v|
+          h[k] = v.count
+        end
+        h
+      end
+    end
+
     def order(*columns)
       @order_values += columns
       @order_values.uniq!
+      self
+    end
+
+    def group(*columns)
+      @group_values += columns
+      @group_values.uniq!
       self
     end
 

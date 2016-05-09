@@ -1,6 +1,7 @@
 module ActiveTsv
   module Querying
-    %i(first last take where count order).each do |m|
+    METHODS = %i(first last take where count order group)
+    METHODS.each do |m|
       module_eval <<-DEFINE_METHOD, __FILE__, __LINE__
         def #{m}(*args, &block)
           all.#{m}(*args, &block)

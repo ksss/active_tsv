@@ -89,4 +89,23 @@ module ActiveTsvRelationTest
       t.error("take expect like first")
     end
   end
+
+  def test_group(t)
+    r = User.all
+    unless r.count == 3
+      t.error("expect count 3 got #{r.count}")
+    end
+
+    one = r.group(:age).count
+    expect = { "30" => 2, "29" => 1 }
+    unless one == expect
+      t.error("expect #{expect} got #{one}")
+    end
+
+    two = r.group(:age, :name).count
+    expect = { ["30", "ksss"] => 1, ["29", "foo"] => 1, ["30", "bar"] => 1 }
+    unless two == expect
+      t.error("expect #{expect} got #{two}")
+    end
+  end
 end
