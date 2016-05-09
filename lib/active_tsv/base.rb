@@ -11,6 +11,8 @@ module ActiveTsv
     SEPARATER = "\t"
 
     class << self
+      include Querying
+
       attr_reader :table_path
 
       def table_path=(path)
@@ -36,8 +38,6 @@ module ActiveTsv
       def all
         Relation.new(self, [])
       end
-
-      include Querying
 
       def open(&block)
         CSV.open(table_path, col_sep: self::SEPARATER, &block)
