@@ -139,7 +139,7 @@ module ActiveTsv
     def each_yield
       return to_enum(:each_yield) unless block_given?
 
-      key_to_value_index = @model.keys.each_with_index.map { |k, index| [k, index] }.to_h
+      key_to_value_index = @model.keys.each_with_index.to_h
       @model.open do |csv|
         csv.gets
         csv.each do |value|
