@@ -134,6 +134,13 @@ module ActiveTsv
       end
     end
 
+    def inspect
+      a = to_a.take(11).map(&:inspect)
+      a[10] = '...' if a.length == 11
+
+      "#<#{self.class.name} [#{a.join(', ')}]>"
+    end
+
     private
 
     def each_yield

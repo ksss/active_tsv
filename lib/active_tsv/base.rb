@@ -64,7 +64,7 @@ module ActiveTsv
     end
 
     def inspect
-      "#<#{self.class} #{to_h}>"
+      "#<#{self.class} #{@attrs.map { |k, v| "#{k}: #{v.inspect}" }.join(', ')}>"
     end
 
     def [](key)
