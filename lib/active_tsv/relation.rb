@@ -44,12 +44,7 @@ module ActiveTsv
 
     def first
       if @order_values.empty?
-        if @where_values.empty?
-          first_value = @model.open { |csv| csv.gets; csv.gets }
-          @model.new(first_value)
-        else
-          each_yield.first
-        end
+        each_yield.first
       else
         to_a.first
       end
