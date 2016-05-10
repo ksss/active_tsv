@@ -77,6 +77,23 @@ module ActiveTsvRelationTest
     end
   end
 
+  def test_order_desc(t)
+    unless User.order(name: :desc).map(&:name) == User.order(:name).map(&:name).reverse
+      t.error("order descending is not equal reverse it")
+    end
+
+    unless User.order(age: :asc).order(name: :desc).map(&:name) == ["foo", "ksss", "bar"]
+      t.error("ordering was break")
+    end
+
+    begin
+      User.order(age: :typo)
+    rescue ArgumentError
+    else
+      t.error("expect raise ArgumentError")
+    end
+  end
+
   def test_ordered_first_and_last(t)
     unless User.order(:name).first.name == "bar"
       t.error("first record didn't change by order")

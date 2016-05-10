@@ -103,9 +103,32 @@ module ActiveTsv
     end
 
     def order(*columns)
-      @order_values += columns
+      @order_values += order_conditions(columns)
       @order_values.uniq!
       self
+    end
+
+    OrderCondition = Struct.new(:column, :direction) do
+      VALID_DIRECTIONS = [:asc, :desc, :ASC, :DESC, "asc", "desc", "ASC", "DESC"]
+      def initialize(column, direction)
+        unless VALID_DIRECTIONS.include?(direction)
+          raise ArgumentError, %(Direction "#{direction}" is invalid. Valid directions are: #{VALID_DIRECTIONS})
+        end
+        super
+      end
+    end
+
+    def order_conditions(columns)
+      columns.map { |column|
+        case column
+        when Symbol
+          OrderCondition.new(column, :asc)
+        when Hash
+          column.map do |k, v|
+            OrderCondition.new(k, v)
+          end
+        end
+      }.flatten
     end
 
     def group(*columns)
@@ -120,13 +143,23 @@ module ActiveTsv
 
     def to_a
       ret = each_yield.to_a
-      if @order_values.empty?
-        ret
-      else
-        ret.sort_by do |i|
-          @order_values.map { |m| i[m] }.join('-')
+      if @order_values.empty?.!
+        ret.sort! do |a, b|
+          @order_values.each do |order_condition|
+            comp = a[order_condition.column] <=> b[order_condition.column]
+            if comp == 0
+              if order_condition.equal?(@order_values.last)
+                break 0
+              else
+                # next
+              end
+            else
+              break comp * (order_condition.direction == :asc ? 1 : -1)
+            end
+          end
         end
       end
+      ret
     end
 
     def inspect
