@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'active_tsv/querying'
-
 module ActiveTsv
   # @example
   #   class User < ActiveTsv::Base

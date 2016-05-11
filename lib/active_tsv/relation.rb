@@ -108,24 +108,24 @@ module ActiveTsv
       self
     end
 
-    OrderCondition = Struct.new(:column, :direction) do
-      VALID_DIRECTIONS = [:asc, :desc, :ASC, :DESC, "asc", "desc", "ASC", "DESC"]
-      def initialize(column, direction)
-        unless VALID_DIRECTIONS.include?(direction)
-          raise ArgumentError, %(Direction "#{direction}" is invalid. Valid directions are: #{VALID_DIRECTIONS})
-        end
-        super
-      end
-    end
+    VALID_DIRECTIONS = [:asc, :desc, :ASC, :DESC, "asc", "desc", "ASC", "DESC"]
 
     def order_conditions(columns)
       columns.map { |column|
         case column
         when Symbol
-          OrderCondition.new(column, :asc)
+          Ascending.new(column)
         when Hash
-          column.map do |k, v|
-            OrderCondition.new(k, v)
+          column.map do |col, direction|
+            unless VALID_DIRECTIONS.include?(direction)
+              raise ArgumentError, %(Direction "#{direction}" is invalid. Valid directions are: #{VALID_DIRECTIONS})
+            end
+            case direction.downcase.to_sym
+            when :asc
+              Ascending.new(col)
+            when :desc
+              Descending.new(col)
+            end
           end
         end
       }.flatten
@@ -145,17 +145,10 @@ module ActiveTsv
       ret = each_yield.to_a
       if @order_values.empty?.!
         ret.sort! do |a, b|
-          @order_values.each do |order_condition|
+          @order_values.each.with_index(1) do |order_condition, index|
             comp = a[order_condition.column] <=> b[order_condition.column]
-            if comp == 0
-              if order_condition.equal?(@order_values.last)
-                break 0
-              else
-                # next
-              end
-            else
-              break comp * (order_condition.direction == :asc ? 1 : -1)
-            end
+            break 0 if comp == 0 && index == @order_values.length
+            break comp * order_condition.to_i if comp != 0
           end
         end
       end
