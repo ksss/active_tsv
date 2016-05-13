@@ -17,25 +17,45 @@ id	name	age
 
 ```ruby
 require 'active_tsv'
+
 class User < ActiveTsv::Base
   self.table_path = "data/users.tsv"
 end
 
+User.all
+=> #<ActiveTsv::Relation [#<User id: "1", name: "ksss", age: "30">, #<User id: "2", name: "foo", age: "29">, #<User id: "3", name: "bar", age: "30">]>
+User.all.to_a
+=> [#<User id: "1", name: "ksss", age: "30">, #<User id: "2", name: "foo", age: "29">, #<User id: "3", name: "bar", age: "30">]
+
 User.first
-#=> #<User {:id=>"1", :name=>"ksss", :age=>"30"}>
+#=> #<User id: "1", name: "ksss", age: "30">
 User.last
-#=> #<User {:id=>"3", :name=>"bar", :age=>"30"}>
+#=> #<User id: "3", name: "bar", age: "30">
+
 User.where(age: 30).each do |user|
   user.name #=> "ksss", "bar"
 end
+
 User.where(age: 30).to_a
-#=> [#<User {:id=>"1", :name=>"ksss", :age=>"30"}>, #<User {:id=>"3", :name=>"bar", :age=>"30"}>]
+#=> [#<User id: "1", name: "ksss", age: "30">, #<User id: "3", name: "bar", age: "30">]
+
 User.where(age: 30).last
-#=> #<User {:id=>"3", :name=>"bar", :age=>"30"}>
+#=> #<User id: "3", name: "bar", age: "30">
+
 User.where(age: 30).where(name: "ksss").first
-#=> #<User {:id=>"1", :name=>"ksss", :age=>"30"}>
+#=> #<User id: "1", name: "ksss", age: "30">
+
 User.where.not(name: "ksss").first
-#=> #<User {:id=>"2", :name=>"foo", :age=>"29"}>
+#=> #<User id: "2", name: "foo", age: "29">
+
+User.group(:age).count
+#=> {"30"=>2, "29"=>1}
+
+User.order(:name).to_a
+#=> [#<User id: "3", name: "bar", age: "30">, #<User id: "2", name: "foo", age: "29">, #<User id: "1", name: "ksss", age: "30">]
+
+User.order(name: :desc).to_a
+=> [#<User id: "1", name: "ksss", age: "30">, #<User id: "2", name: "foo", age: "29">, #<User id: "3", name: "bar", age: "30">]
 ```
 
 Also Supported **CSV**.
