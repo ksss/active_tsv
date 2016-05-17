@@ -73,12 +73,12 @@ module ActiveTsv
       __send__ "#{key}=", value
     end
 
-    def to_h
+    def attributes
       @attrs.dup
     end
 
     def ==(other)
-      super || other.instance_of?(self.class) && to_h == other.to_h
+      super || other.instance_of?(self.class) && attributes == other.attributes
     end
     alias eql? ==
   end
