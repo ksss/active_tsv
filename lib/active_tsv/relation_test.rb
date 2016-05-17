@@ -61,6 +61,24 @@ module ActiveTsvRelationTest
     end
   end
 
+  def test_pluck(t)
+    unless User.pluck == User.all.to_a.map { |i| [i.id, i.name, i.age] }
+      t.error("break values")
+    end
+
+    unless User.pluck(:id) == User.all.to_a.map(&:id)
+      t.error("break values")
+    end
+
+    unless User.order(:name).pluck(:id) == User.order(:name).to_a.map(&:id)
+      t.error("break values")
+    end
+
+    unless User.pluck(:id, :name) == User.all.to_a.map { |i| [i.id, i.name] }
+      t.error("break values")
+    end
+  end
+
   def test_order(t)
     r = User.order(:age, :name)
     unless ActiveTsv::Relation === r

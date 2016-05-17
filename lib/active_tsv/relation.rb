@@ -41,6 +41,18 @@ module ActiveTsv
       end
     end
 
+    def pluck(*fields)
+      key_to_value_index = @model.keys.each_with_index.to_h
+      if fields.empty?
+        to_value_a
+      elsif fields.one?
+        field = fields.first
+        to_value_a.map { |v| v[key_to_value_index[field]] }
+      else
+        to_value_a.map { |v| fields.map { |field| v[key_to_value_index[field]] } }
+      end
+    end
+
     def exists?
       !first.nil?
     end
