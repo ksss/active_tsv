@@ -47,7 +47,7 @@ module ActiveTsv
 
     def first
       if @order_values.empty?
-        each_yield.first
+        each_model.first
       else
         to_a.first
       end
@@ -78,7 +78,7 @@ module ActiveTsv
     def take(n = nil)
       if n
         if @order_values.empty?
-          each_yield.take(n)
+          each_model.take(n)
         else
           to_a.take(n)
         end
@@ -120,17 +120,7 @@ module ActiveTsv
     end
 
     def to_a
-      ret = each_yield.to_a
-      if @order_values.empty?.!
-        ret.sort! do |a, b|
-          @order_values.each.with_index(1) do |order_condition, index|
-            comp = a[order_condition.column] <=> b[order_condition.column]
-            break 0 if comp == 0 && index == @order_values.length
-            break comp * order_condition.to_i if comp != 0
-          end
-        end
-      end
-      ret
+      to_value_a.map { |v| @model.new(v) }
     end
 
     def inspect
@@ -142,20 +132,41 @@ module ActiveTsv
 
     private
 
-    def each_yield
-      return to_enum(:each_yield) unless block_given?
+    def to_value_a
+      ret = each_value.to_a
+      key_to_value_index = @model.keys.each_with_index.to_h
+      if @order_values.empty?.!
+        ret.sort! do |a, b|
+          @order_values.each.with_index(1) do |order_condition, index|
+            comp = a[key_to_value_index[order_condition.column]] <=> b[key_to_value_index[order_condition.column]]
+            break 0 if comp == 0 && index == @order_values.length
+            break comp * order_condition.to_i if comp != 0
+          end
+        end
+      end
+      ret
+    end
+
+    def each_value
+      return to_enum(__method__) unless block_given?
 
       key_to_value_index = @model.keys.each_with_index.to_h
       @model.open do |csv|
         csv.gets
         csv.each do |value|
-          yield @model.new(value) if @where_values.all? { |cond|
+          yield value if @where_values.all? { |cond|
             cond.values.all? do |k, v|
               value[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
             end
           }
         end
       end
+    end
+
+    def each_model
+      return to_enum(__method__) unless block_given?
+
+      each_value { |v| yield @model.new(v) }
     end
 
     def order_conditions(columns)
