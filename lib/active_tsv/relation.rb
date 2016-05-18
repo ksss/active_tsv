@@ -146,8 +146,8 @@ module ActiveTsv
 
     def to_value_a
       ret = each_value.to_a
-      key_to_value_index = @model.keys.each_with_index.to_h
       if @order_values.empty?.!
+        key_to_value_index = @model.keys.each_with_index.to_h
         if @order_values.one?
           order_condition = @order_values.first
           index = key_to_value_index[order_condition.column]
