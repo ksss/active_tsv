@@ -152,7 +152,7 @@ module ActiveTsv
           order_condition = @order_values.first
           index = key_to_value_index[order_condition.column]
           ret.sort_by! { |i| i[index] }
-          if order_condition.kind_of?(Descending)
+          if order_condition.descending?
             ret.reverse!
           end
         else
