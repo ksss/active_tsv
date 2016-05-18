@@ -148,11 +148,20 @@ module ActiveTsv
       ret = each_value.to_a
       key_to_value_index = @model.keys.each_with_index.to_h
       if @order_values.empty?.!
-        ret.sort! do |a, b|
-          @order_values.each.with_index(1) do |order_condition, index|
-            comp = a[key_to_value_index[order_condition.column]] <=> b[key_to_value_index[order_condition.column]]
-            break 0 if comp == 0 && index == @order_values.length
-            break comp * order_condition.to_i if comp != 0
+        if @order_values.one?
+          order_condition = @order_values.first
+          index = key_to_value_index[order_condition.column]
+          ret.sort_by! { |i| i[index] }
+          if order_condition.kind_of?(Descending)
+            ret.reverse!
+          end
+        else
+          ret.sort! do |a, b|
+            @order_values.each.with_index(1) do |order_condition, index|
+              comp = a[key_to_value_index[order_condition.column]] <=> b[key_to_value_index[order_condition.column]]
+              break 0 if comp == 0 && index == @order_values.length
+              break comp * order_condition.to_i if comp != 0
+            end
           end
         end
       end
