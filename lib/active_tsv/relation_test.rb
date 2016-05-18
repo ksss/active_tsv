@@ -171,4 +171,32 @@ module ActiveTsvRelationTest
       t.error("expect #{expect} got #{two}")
     end
   end
+
+  def test_maximum(t)
+    unless User.maximum(:name) == "ksss"
+      t.error("Cannot get maximum value")
+    end
+
+    unless User.where.not(name: "ksss").maximum(:name) == "foo"
+      t.error("Cannot get maximum value")
+    end
+
+    unless User.where.not(id: "1").where.not(id: "2").where.not(id: "3").maximum(:id).nil?
+      t.error("expect nil")
+    end
+  end
+
+  def test_minimum(t)
+    unless User.minimum(:name) == "bar"
+      t.error("Cannot get maximum value")
+    end
+
+    unless User.where.not(name: "bar").minimum(:name) == "foo"
+      t.error("Cannot get maximum value")
+    end
+
+    unless User.where.not(id: "1").where.not(id: "2").where.not(id: "3").minimum(:id).nil?
+      t.error("expect nil")
+    end
+  end
 end

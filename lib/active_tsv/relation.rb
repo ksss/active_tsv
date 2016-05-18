@@ -142,6 +142,20 @@ module ActiveTsv
       "#<#{self.class.name} [#{a.join(', ')}]>"
     end
 
+    def maximum(column)
+      index = @model.keys.each_with_index.to_h[column]
+      max = each_value.max_by { |i| i[index] }
+      return nil unless max
+      max[index]
+    end
+
+    def minimum(column)
+      index = @model.keys.each_with_index.to_h[column]
+      min = each_value.min_by { |i| i[index] }
+      return nil unless min
+      min[index]
+    end
+
     private
 
     def to_value_a
