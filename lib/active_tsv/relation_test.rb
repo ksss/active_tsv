@@ -5,6 +5,33 @@ module ActiveTsvRelationTest
     self.table_path = "data/users.tsv"
   end
 
+  def test_find(t)
+    unless User.find(1).name == "ksss"
+      t.error("Couldn't find 'id'=1")
+    end
+
+    unless User.find(1, 2).map(&:name) == ["ksss", "foo"]
+      t.error("Couldn't find 'id'=1 and 2")
+    end
+
+    c = Struct.new(:code, :expect)
+    [
+      c.new(-> { User.find }, "Couldn't find ActiveTsvRelationTest::User without an ID"),
+      c.new(-> { User.find(100) }, "Couldn't find ActiveTsvRelationTest::User with 'id'=100"),
+      c.new(-> { User.find(1, 100) }, "Couldn't find all ActiveTsvRelationTest::User with 'id': (1, 100) (found 1 results, but was looking for 2)"),
+    ].each do |set|
+      begin
+        set.code.call
+      rescue ActiveTsv::RecordNotFound => e
+        unless e.message == set.expect
+          t.error("Unexpected error message")
+        end
+      else
+        t.error("expect ActiveTsv::RecordNotFound")
+      end
+    end
+  end
+
   def test_where(t)
     r = User.where(age: 30).where(name: "ksss")
     unless ActiveTsv::Relation === r

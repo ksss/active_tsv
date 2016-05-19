@@ -30,10 +30,31 @@ module ActiveTsv
         group_values == other.group_values
     end
 
+    def find(*ids)
+      case ids.length
+      when 0
+        raise ActiveTsv::RecordNotFound, "Couldn't find #{@model} without an ID"
+      when 1
+        id = ids.first
+        record = where(@model.primary_key => id).first
+        unless record
+          raise ActiveTsv::RecordNotFound, "Couldn't find #{@model} with '#{@model.primary_key}'=#{id}"
+        end
+        record
+      else
+        records = where(@model.primary_key => ids).to_a
+        unless ids.length == records.length
+          raise ActiveTsv::RecordNotFound, "Couldn't find all #{@model} with '#{@model.primary_key}': (#{ids.join(', ')}) (found #{records.length} results, but was looking for #{ids.length})"
+        end
+        records
+      end
+    end
+
     def where(where_value = nil)
       if where_value
         dup.tap do |r|
-          r.where_values << Condition::Equal.new(where_value)
+          values = where_value.map { |k, v| [k.to_sym, v] }.to_h
+          r.where_values << Condition::Equal.new(values)
         end
       else
         WhereChain.new(dup)

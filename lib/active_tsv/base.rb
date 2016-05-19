@@ -7,11 +7,13 @@ module ActiveTsv
   #   end
   class Base
     SEPARATER = "\t"
+    DEFAULT_PRIMARY_KEY = "id"
 
     class << self
       include Querying
 
       attr_reader :table_path
+      attr_writer :primary_key
 
       def table_path=(path)
         reload(path)
@@ -47,6 +49,10 @@ module ActiveTsv
 
       def keys
         @keys ||= open { |csv| csv.gets }.map(&:to_sym)
+      end
+
+      def primary_key
+        @primary_key ||= DEFAULT_PRIMARY_KEY
       end
     end
 
