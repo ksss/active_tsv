@@ -27,6 +27,17 @@ module ActiveTsvRelationTest
     end
   end
 
+  def test_where_not_support(t)
+    r = User.all
+    r.where_values << Struct.new(:foo).new('foo')
+    begin
+      r.to_a
+    rescue ActiveTsv::Condition::NotSupportError
+    else
+      t.error("expect raise an error ActiveTsv::Condition::NotSupportError, but nothing")
+    end
+  end
+
   def test_equal(t)
     unless User.all == User.all
       t.error("expect same")

@@ -206,7 +206,7 @@ module ActiveTsv
                   !(value[key_to_value_index[k]] == v.to_s)
                 end
               else
-                raise NotSupportError, "Dose not support condition #{cond}"
+                raise Condition::NotSupportError, "Dose not support condition #{cond}"
               end
             end
           }
