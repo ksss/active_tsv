@@ -16,6 +16,17 @@ module ActiveTsvRelationTest
     end
   end
 
+  def test_where_in(t)
+    cond = ["1", "2"]
+    unless User.where(id: cond).map(&:name) == ["ksss", "foo"]
+      t.error("break where id in #{cond}")
+    end
+
+    unless User.where.not(id: cond).map(&:name) == ["bar"]
+      t.error("break where id not in #{cond}")
+    end
+  end
+
   def test_equal(t)
     unless User.all == User.all
       t.error("expect same")

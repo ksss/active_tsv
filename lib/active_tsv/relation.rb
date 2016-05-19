@@ -191,7 +191,24 @@ module ActiveTsv
         csv.each do |value|
           yield value if @where_values.all? { |cond|
             cond.values.all? do |k, v|
-              value[key_to_value_index[k]].__send__(cond.method_name, v.to_s)
+              case cond.method_name
+              when :==
+                case v
+                when Array
+                  v.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
+                else
+                  value[key_to_value_index[k]] == v.to_s
+                end
+              when :!=
+                case v
+                when Array
+                  !v.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
+                else
+                  !(value[key_to_value_index[k]] == v.to_s)
+                end
+              else
+                raise "Dose not support condition #{cond}"
+              end
             end
           }
         end
