@@ -1,31 +1,35 @@
+# frozen_string_literal: true
+
 module ActiveTsv
-  Ordering = Struct.new(:column)
+  class Ordering < Struct.new(:column)
+    VALID_DIRECTIONS = [:asc, :desc, :ASC, :DESC, "asc", "desc", "ASC", "DESC"]
 
-  class Ascending < Ordering
-    def to_i
-      1
+    class Ascending < Ordering
+      def to_i
+        1
+      end
+
+      def ascending?
+        true
+      end
+
+      def descending?
+        false
+      end
     end
 
-    def ascending?
-      true
-    end
+    class Descending < Ordering
+      def to_i
+        -1
+      end
 
-    def descending?
-      false
-    end
-  end
+      def ascending?
+        false
+      end
 
-  class Descending < Ordering
-    def to_i
-      -1
-    end
-
-    def ascending?
-      false
-    end
-
-    def descending?
-      true
+      def descending?
+        true
+      end
     end
   end
 end

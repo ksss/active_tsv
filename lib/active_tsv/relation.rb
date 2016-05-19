@@ -5,7 +5,6 @@ module ActiveTsv
     include Enumerable
 
     BUF_SIZE = 1024
-    VALID_DIRECTIONS = [:asc, :desc, :ASC, :DESC, "asc", "desc", "ASC", "DESC"]
 
     attr_reader :model
     attr_accessor :where_values
@@ -225,17 +224,17 @@ module ActiveTsv
       columns.map { |column|
         case column
         when Symbol
-          Ascending.new(column)
+          Ordering::Ascending.new(column)
         when Hash
           column.map do |col, direction|
-            unless VALID_DIRECTIONS.include?(direction)
-              raise ArgumentError, %(Direction "#{direction}" is invalid. Valid directions are: #{VALID_DIRECTIONS})
+            unless Ordering::VALID_DIRECTIONS.include?(direction)
+              raise ArgumentError, %(Direction "#{direction}" is invalid. Valid directions are: #{Ordering::VALID_DIRECTIONS})
             end
             case direction.downcase.to_sym
             when :asc
-              Ascending.new(col)
+              Ordering::Ascending.new(col)
             when :desc
-              Descending.new(col)
+              Ordering::Descending.new(col)
             end
           end
         end
