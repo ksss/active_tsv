@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'csv'
+require 'nkf'
 
 require "active_tsv/querying"
 require "active_tsv/relation"

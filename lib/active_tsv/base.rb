@@ -14,6 +14,7 @@ module ActiveTsv
 
       attr_reader :table_path
       attr_writer :primary_key
+      attr_accessor :encoding
 
       def table_path=(path)
         reload(path)
@@ -29,6 +30,7 @@ module ActiveTsv
 
         @keys = nil
         @table_path = path
+        @encoding = File.open(path) { |f| NKF.guess(f.gets) }
         keys.each do |k|
           define_method(k) { @attrs[k] }
           define_method("#{k}=") { |v| @attrs[k] = v }
@@ -44,7 +46,7 @@ module ActiveTsv
       end
 
       def open(&block)
-        CSV.open(table_path, col_sep: self::SEPARATER, &block)
+        CSV.open(table_path, "r:#{@encoding}:UTF-8", col_sep: self::SEPARATER, &block)
       end
 
       def keys

@@ -87,7 +87,7 @@ module ActiveTsv
 
     def last
       if @where_values.empty? && @order_values.empty?
-        last_value = File.open(@model.table_path) do |f|
+        last_value = File.open(@model.table_path, "r:#{@model.encoding}:UTF-8") do |f|
           f.seek(0, IO::SEEK_END)
           buf_size = [f.size, self.class::BUF_SIZE].min
           while true
