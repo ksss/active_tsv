@@ -6,7 +6,7 @@ module ActiveTsv
 
     def not(condition)
       @relation.dup.tap do |r|
-        r.where_values << Condition.new(:!=, condition)
+        r.where_values << Condition::NotEqual.new(condition)
       end
     end
   end
