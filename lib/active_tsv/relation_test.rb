@@ -10,6 +10,10 @@ module ActiveTsvRelationTest
       t.error("Couldn't find 'id'=1")
     end
 
+    unless User.where(age: 30).find(1).name == "ksss"
+      t.error("Couldn't find 'id'=1")
+    end
+
     unless User.find(1, 2).map(&:name) == ["ksss", "foo"]
       t.error("Couldn't find 'id'=1 and 2")
     end
@@ -17,6 +21,7 @@ module ActiveTsvRelationTest
     c = Struct.new(:code, :expect)
     [
       c.new(-> { User.find }, "Couldn't find ActiveTsvRelationTest::User without an ID"),
+      c.new(-> { User.where(age: 300).find(1) }, "Couldn't find ActiveTsvRelationTest::User with 'id'=1"),
       c.new(-> { User.find(100) }, "Couldn't find ActiveTsvRelationTest::User with 'id'=100"),
       c.new(-> { User.find(1, 100) }, "Couldn't find all ActiveTsvRelationTest::User with 'id': (1, 100) (found 1 results, but was looking for 2)"),
     ].each do |set|
