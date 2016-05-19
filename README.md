@@ -45,6 +45,9 @@ User.where(age: 30).last
 User.where(age: 30).where(name: "ksss").first
 #=> #<User id: "1", name: "ksss", age: "30">
 
+User.where(id: [1, 2]).to_a
+#=> [#<User id: "1", name: "ksss", age: "30">, #<User id: "2", name: "foo", age: "29">]
+
 User.where.not(name: "ksss").first
 #=> #<User id: "2", name: "foo", age: "29">
 
