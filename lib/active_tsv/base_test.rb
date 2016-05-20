@@ -7,6 +7,28 @@ module ActiveTsvBaseTest
     scope :age, ->(a) { where(age: a) }
   end
 
+  def test_s_encoding=(t)
+    User.encoding = Encoding::ASCII_8BIT
+    unless User.encoding == Encoding::ASCII_8BIT
+      t.error("encoding couldn't change")
+    end
+
+    User.encoding = 'utf-8'
+    unless User.encoding == Encoding::UTF_8
+      t.error("encoding couldn't change")
+    end
+
+    begin
+      User.encoding = 'nothing'
+    rescue ArgumentError => e
+      unless e.message == "unknown encoding name - nothing"
+        t.error("Unexpected error")
+      end
+    else
+      t.error("expect ArgumentError")
+    end
+  end
+
   def test_s_scope(t)
     unless User.thirty.to_a == User.where(age: 30).to_a
       t.error("named scope not expected behavior")

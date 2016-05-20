@@ -14,7 +14,7 @@ module ActiveTsv
 
       attr_reader :table_path
       attr_writer :primary_key
-      attr_accessor :encoding
+      attr_reader :encoding
 
       def table_path=(path)
         reload(path)
@@ -59,6 +59,17 @@ module ActiveTsv
 
       def primary_key
         @primary_key ||= DEFAULT_PRIMARY_KEY
+      end
+
+      def encoding=(enc)
+        case enc
+        when String
+          @encoding = Encoding.find(enc)
+        when Encoding
+          @encoding = enc
+        else
+          raise TypeError, "#{enc.class} dose not support"
+        end
       end
     end
 
