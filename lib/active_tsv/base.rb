@@ -74,11 +74,11 @@ module ActiveTsv
     end
 
     def [](key)
-      __send__ key
+      @attrs[key.to_sym]
     end
 
     def []=(key, value)
-      __send__ "#{key}=", value
+      @attrs[key.to_sym] = value
     end
 
     def attributes
