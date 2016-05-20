@@ -19,7 +19,9 @@ id	name	age
 require 'active_tsv'
 
 class User < ActiveTsv::Base
-  self.table_path = "data/users.tsv"
+  self.table_path = "data/users.tsv" # required
+  # self.encoding = Encoding::Shift_JIS # optional
+  # self.primary_key = "uid" # optional
 end
 
 User.all

@@ -30,7 +30,7 @@ module ActiveTsv
 
         @keys = nil
         @table_path = path
-        @encoding = File.open(path) { |f| NKF.guess(f.gets) }
+        @encoding ||= File.open(path) { |f| NKF.guess(f.gets) }
         keys.each do |k|
           define_method(k) { @attrs[k] }
           define_method("#{k}=") { |v| @attrs[k] = v }
