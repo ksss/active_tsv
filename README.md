@@ -23,6 +23,12 @@ class User < ActiveTsv::Base
   # self.encoding = Encoding::Shift_JIS # optional
   # self.primary_key = "uid"            # optional
   # self.keys = %w(id name age)         # optional
+  has_many :nicknames
+end
+
+class Nickname < ActiveTsv::Base
+  self.table_path = "data/nicknames.tsv"
+  belongs_to :user
 end
 
 User.all
@@ -62,6 +68,12 @@ User.order(:name).to_a
 
 User.order(name: :desc).to_a
 => [#<User id: "1", name: "ksss", age: "30">, #<User id: "2", name: "foo", age: "29">, #<User id: "3", name: "bar", age: "30">]
+
+User.first.nicknames
+#=> #<ActiveTsv::Relation [#<Nickname id: "1", user_id: "1", nickname: "yuki">, #<Nickname id: "2", user_id: "1", nickname: "kuri">, #<Nickname id: "3", user_id: "1", nickname: "k">]>
+
+Nickname.last.user
+#=> #<User id: "2", name: "foo", age: "29">
 ```
 
 Also Supported **CSV**.
