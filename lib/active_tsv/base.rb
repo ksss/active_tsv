@@ -71,6 +71,15 @@ module ActiveTsv
           raise TypeError, "#{enc.class} dose not support"
         end
       end
+
+      def has_many(name)
+        define_method(name) do
+          singularized = name.to_s.singularize
+          reflection_id = "#{self.class.name.downcase}_id"
+          klass = singularized.classify.constantize
+          klass.where(reflection_id => self[self.class.primary_key])
+        end
+      end
     end
 
     def initialize(attrs = {})

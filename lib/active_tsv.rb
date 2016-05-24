@@ -3,6 +3,8 @@
 require 'csv'
 require 'nkf'
 
+require "active_support/inflector"
+
 require "active_tsv/querying"
 require "active_tsv/relation"
 require "active_tsv/where_chain"

@@ -1,12 +1,17 @@
 require 'active_tsv'
 
-module ActiveTsvBaseTest
-  class User < ActiveTsv::Base
-    self.table_path = "data/users.tsv"
-    scope :thirty, -> { where(age: 30) }
-    scope :age, ->(a) { where(age: a) }
-  end
+class User < ActiveTsv::Base
+  self.table_path = "data/users.tsv"
+  scope :thirty, -> { where(age: 30) }
+  scope :age, ->(a) { where(age: a) }
+  has_many :nicknames
+end
 
+class Nickname < ActiveTsv::Base
+  self.table_path = "data/nicknames.tsv"
+end
+
+module ActiveTsvBaseTest
   def test_s_encoding=(t)
     User.encoding = Encoding::ASCII_8BIT
     unless User.encoding == Encoding::ASCII_8BIT
@@ -84,6 +89,25 @@ module ActiveTsvBaseTest
 
     unless all.length == 3
       t.error("unexpected size")
+    end
+  end
+
+  def test_s_has_many(t)
+    [
+      [User.first, %w(yuki kuri k)],
+      [User.where(name: "foo").first, ["f"]],
+      [User.where(name: "bar").first, []],
+    ].each do |user, expect|
+      r = user.nicknames
+      unless ActiveTsv::Relation === r
+        t.error("`#{user}.nicknames` return value broken")
+      end
+      unless r.all? { |i| i.instance_of?(Nickname) }
+        t.error("broken reflection")
+      end
+      unless r.to_a.map(&:nickname) == expect
+        t.error("expect #{expect} got #{r.to_a.map(&:nickname)}")
+      end
     end
   end
 
