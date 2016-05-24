@@ -10,6 +10,8 @@ end
 
 class Nickname < ActiveTsv::Base
   self.table_path = "data/nicknames.tsv"
+  belongs_to :user
+  belongs_to :nothing
 end
 
 module ActiveTsvBaseTest
@@ -113,6 +115,30 @@ module ActiveTsvBaseTest
 
     begin
       User.first.nothings
+    rescue NameError => e
+      unless e.message == "uninitialized constant Nothing"
+        t.error("Unexpected error message #{e.message}")
+      end
+    else
+      t.error("expect raise NameError")
+    end
+  end
+
+  def test_s_belongs_to(t)
+    u = Nickname.first.user
+    unless User === u
+      t.error("belongs_to member was break")
+    end
+    unless u == User.first
+      t.error("expect first user")
+    end
+
+    unless Nickname.last.user.name == "foo"
+      t.error("belongs_to value broken")
+    end
+
+    begin
+      Nickname.first.nothing
     rescue NameError => e
       unless e.message == "uninitialized constant Nothing"
         t.error("Unexpected error message #{e.message}")
