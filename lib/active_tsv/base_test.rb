@@ -5,6 +5,7 @@ class User < ActiveTsv::Base
   scope :thirty, -> { where(age: 30) }
   scope :age, ->(a) { where(age: a) }
   has_many :nicknames
+  has_many :nothings
 end
 
 class Nickname < ActiveTsv::Base
@@ -108,6 +109,16 @@ module ActiveTsvBaseTest
       unless r.to_a.map(&:nickname) == expect
         t.error("expect #{expect} got #{r.to_a.map(&:nickname)}")
       end
+    end
+
+    begin
+      User.first.nothings
+    rescue NameError => e
+      unless e.message == "uninitialized constant Nothing"
+        t.error("Unexpected error message #{e.message}")
+      end
+    else
+      t.error("expect raise NameError")
     end
   end
 
