@@ -67,9 +67,9 @@ module ActiveTsv
         to_value_a
       elsif fields.one?
         field = fields.first
-        to_value_a.map { |v| v[key_to_value_index[field]] }
+        to_value_a.map! { |v| v[key_to_value_index[field]] }
       else
-        to_value_a.map { |v| fields.map { |field| v[key_to_value_index[field]] } }
+        to_value_a.map! { |v| fields.map { |field| v[key_to_value_index[field]] } }
       end
     end
 
@@ -112,7 +112,7 @@ module ActiveTsv
         if @order_values.empty?
           each_model.take(n)
         else
-          to_value_a.take(n).map { |i| @model.new(i) }
+          to_value_a.take(n).map! { |i| @model.new(i) }
         end
       else
         first
@@ -152,11 +152,11 @@ module ActiveTsv
     end
 
     def to_a
-      to_value_a.map { |v| @model.new(v) }
+      to_value_a.map! { |v| @model.new(v) }
     end
 
     def inspect
-      a = to_a.take(11).map(&:inspect)
+      a = to_a.take(11).map!(&:inspect)
       a[10] = '...' if a.length == 11
 
       "#<#{self.class.name} [#{a.join(', ')}]>"
