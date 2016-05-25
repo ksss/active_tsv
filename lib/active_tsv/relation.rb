@@ -156,7 +156,7 @@ module ActiveTsv
     end
 
     def inspect
-      a = to_a.take(11).map!(&:inspect)
+      a = to_value_a.take(11).map! { |i| @model.new(i) }.map!(&:inspect)
       a[10] = '...' if a.length == 11
 
       "#<#{self.class.name} [#{a.join(', ')}]>"
