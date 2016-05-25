@@ -112,7 +112,7 @@ module ActiveTsv
         if @order_values.empty?
           each_model.take(n)
         else
-          to_a.take(n)
+          to_value_a.take(n).map { |i| @model.new(i) }
         end
       else
         first
