@@ -6,6 +6,9 @@ class User < ActiveTsv::Base
   has_many :nothings
   has_one :password
   has_one :nothing
+
+  has_many :user_books
+  has_many :books, through: :user_books
 end
 
 class Nickname < ActiveTsv::Base
@@ -17,6 +20,18 @@ end
 class Password < ActiveTsv::Base
   self.table_path = "data/passwords.tsv"
   belongs_to :user
+end
+
+class Book < ActiveTsv::Base
+  self.table_path = "data/books.tsv"
+  has_many :user_books
+  has_many :users, through: :user_books
+end
+
+class UserBook < ActiveTsv::Base
+  self.table_path = "data/user_books.tsv"
+  belongs_to :user
+  belongs_to :book
 end
 
 module ActiveTsvReflectionTest
@@ -46,6 +61,24 @@ module ActiveTsvReflectionTest
       end
     else
       t.error("expect raise NameError")
+    end
+  end
+
+  def test_s_has_many_with_through(t)
+    ksss, foo, bar = *User.all.to_a
+
+    [
+      [ksss, ["Good book", "Greate book", "Perfect book"]],
+      [foo, ["Greate book"]],
+      [bar, []],
+    ].each do |user, expect|
+      r = user.books
+      unless ActiveTsv::Relation === r
+        t.error("return value was broken")
+      end
+      unless r.map(&:title) == expect
+        t.error("expect #{expect} got #{r.map(&:title)}")
+      end
     end
   end
 
