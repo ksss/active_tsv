@@ -15,6 +15,16 @@ id	name	age
 3	bar	30
 ```
 
+data/nicknames.tsv
+
+```tsv
+id	user_id	nickname
+1	1	yuki
+2	1	kuri
+3	1	k
+4	2	f
+```
+
 ```ruby
 require 'active_tsv'
 
