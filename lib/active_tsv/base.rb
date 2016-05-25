@@ -14,7 +14,6 @@ module ActiveTsv
       include Reflection
 
       attr_reader :table_path
-      attr_writer :primary_key
 
       def table_path=(path)
         reload(path)
@@ -60,6 +59,8 @@ module ActiveTsv
         @primary_key ||= DEFAULT_PRIMARY_KEY
       end
 
+      attr_writer :primary_key
+
       def encoding
         @encoding ||= Encoding::UTF_8
       end
@@ -71,7 +72,7 @@ module ActiveTsv
         when Encoding
           @encoding = enc
         else
-          raise TypeError, "#{enc.class} dose not support"
+          raise ArgumentError, "#{enc.class} dose not support"
         end
       end
     end
