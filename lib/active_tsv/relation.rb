@@ -103,7 +103,7 @@ module ActiveTsv
         end
         @model.new(CSV.new(last_value, col_sep: @model::SEPARATER).shift)
       else
-        to_a.last
+        @model.new(to_value_a.last)
       end
     end
 
