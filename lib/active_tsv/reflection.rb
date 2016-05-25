@@ -4,7 +4,7 @@ module ActiveTsv
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}
           #{name.to_s.singularize.classify}.where(
-            "#{self.name.downcase}_id" => self[self.class.primary_key]
+            "#{self.name.underscore}_id" => self[self.class.primary_key]
           )
         end
       CODE
@@ -14,7 +14,7 @@ module ActiveTsv
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}
           #{name.to_s.singularize.classify}.where(
-            "#{self.name.downcase}_id" => self[self.class.primary_key]
+            "#{self.name.underscore}_id" => self[self.class.primary_key]
           ).first
         end
       CODE
