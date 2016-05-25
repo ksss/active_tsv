@@ -66,10 +66,10 @@ module ActiveTsv
       if fields.empty?
         to_value_a
       elsif fields.one?
-        field = fields.first
+        field = fields.first.to_sym
         to_value_a.map! { |v| v[key_to_value_index[field]] }
       else
-        to_value_a.map! { |v| fields.map { |field| v[key_to_value_index[field]] } }
+        to_value_a.map! { |v| fields.map { |field| v[key_to_value_index[field.to_sym]] } }
       end
     end
 
