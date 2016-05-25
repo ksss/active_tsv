@@ -5,6 +5,7 @@ require 'csv'
 require "active_support/inflector"
 
 require "active_tsv/querying"
+require "active_tsv/reflection"
 require "active_tsv/relation"
 require "active_tsv/where_chain"
 require "active_tsv/condition"
