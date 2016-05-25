@@ -1,12 +1,13 @@
 module ActiveTsv
   module Reflection
     def has_many(name)
-      define_method(name) do
-        singularized = name.to_s.singularize
-        reflection_id = "#{self.class.name.downcase}_id"
-        klass = singularized.classify.constantize
-        klass.where(reflection_id => self[self.class.primary_key])
-      end
+      class_eval <<-CODE, __FILE__, __LINE__ + 1
+        def #{name}
+          #{name.to_s.singularize.classify}.where(
+            "#{self.name.downcase}_id" => self[self.class.primary_key]
+          )
+        end
+      CODE
     end
 
     def has_one(name)
