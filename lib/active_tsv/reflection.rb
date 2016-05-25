@@ -21,10 +21,11 @@ module ActiveTsv
     end
 
     def belongs_to(name)
-      define_method(name) do
-        klass = name.to_s.classify.constantize
-        klass.where(klass.primary_key => self["#{name}_id"]).first
-      end
+      class_eval <<-CODE, __FILE__, __LINE__ + 1
+        def #{name}
+          #{name.to_s.classify}.where(self.class.primary_key => self["#{name}_id"]).first
+        end
+      CODE
     end
   end
 end

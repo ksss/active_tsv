@@ -92,8 +92,8 @@ module ActiveTsvReflectionTest
     begin
       Nickname.first.nothing
     rescue NameError => e
-      unless e.message == "uninitialized constant Nothing"
-        t.error("Unexpected error message #{e.message}")
+      unless e.message == "uninitialized constant Nickname::Nothing"
+        t.error("Unexpected error message '#{e.message}'")
       end
     else
       t.error("expect raise NameError")
