@@ -186,9 +186,7 @@ module ActiveTsv
           order_condition = @order_values.first
           index = key_to_value_index[order_condition.column]
           ret.sort_by! { |i| i[index] }
-          if order_condition.descending?
-            ret.reverse!
-          end
+          ret.reverse! if order_condition.descending?
         else
           ret.sort! do |a, b|
             @order_values.each.with_index(1) do |order_condition, index|
