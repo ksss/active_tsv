@@ -53,8 +53,7 @@ module ActiveTsv
     def where(where_value = nil)
       if where_value
         dup.tap do |r|
-          values = where_value.map { |k, v| [k.to_sym, v] }.to_h
-          r.where_values << Condition::Equal.new(values)
+          r.where_values << Condition::Equal.new(where_value)
         end
       else
         WhereChain.new(dup)
@@ -205,18 +204,20 @@ module ActiveTsv
             case cond
             when Condition::Equal
               cond.values.all? do |k, v|
+                index = key_to_value_index[k.to_sym]
                 if v.respond_to?(:to_a)
-                  v.to_a.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
+                  v.to_a.any? { |vv| value[index] == vv.to_s }
                 else
-                  value[key_to_value_index[k]] == v.to_s
+                  value[index] == v.to_s
                 end
               end
             when Condition::NotEqual
               cond.values.all? do |k, v|
+                index = key_to_value_index[k.to_sym]
                 if v.respond_to?(:to_a)
-                  !v.to_a.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
+                  !v.to_a.any? { |vv| value[index] == vv.to_s }
                 else
-                  !(value[key_to_value_index[k]] == v.to_s)
+                  !(value[index] == v.to_s)
                 end
               end
             else
