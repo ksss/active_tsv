@@ -207,26 +207,28 @@ module ActiveTsv
       @model.open do |csv|
         csv.gets
         csv.each do |value|
-          yield value if @where_values.all? { |cond|
-            cond.values.all? do |k, v|
-              case cond
-              when Condition::Equal
+          yield value if @where_values.all? do |cond|
+            case cond
+            when Condition::Equal
+              cond.values.all? do |k, v|
                 if v.respond_to?(:to_a)
                   v.to_a.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
                 else
                   value[key_to_value_index[k]] == v.to_s
                 end
-              when Condition::NotEqual
+              end
+            when Condition::NotEqual
+              cond.values.all? do |k, v|
                 if v.respond_to?(:to_a)
                   !v.to_a.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
                 else
                   !(value[key_to_value_index[k]] == v.to_s)
                 end
-              else
-                raise Condition::NotSupportError, "Dose not support condition #{cond}"
               end
+            else
+              raise Condition::NotSupportError, "Dose not support condition #{cond}"
             end
-          }
+          end
         end
       end
     end
