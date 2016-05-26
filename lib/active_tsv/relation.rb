@@ -163,17 +163,11 @@ module ActiveTsv
     end
 
     def maximum(column)
-      index = @model.keys.each_with_index.to_h[column]
-      max = each_value.max_by { |i| i[index] }
-      return nil unless max
-      max[index]
+      pluck(column).max
     end
 
     def minimum(column)
-      index = @model.keys.each_with_index.to_h[column]
-      min = each_value.min_by { |i| i[index] }
-      return nil unless min
-      min[index]
+      pluck(column).min
     end
 
     private
