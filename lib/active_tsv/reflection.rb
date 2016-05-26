@@ -5,7 +5,7 @@ module ActiveTsv
         class_eval <<-CODE, __FILE__, __LINE__ + 1
           def #{name}
             #{name.to_s.classify}.where(
-              #{name.to_s.classify}.primary_key => #{through}.pluck("#{name.to_s.singularize.underscore}_id")
+              #{name.to_s.classify}.primary_key => #{through}.pluck(:#{name.to_s.singularize.underscore}_id)
             )
           end
         CODE
@@ -13,7 +13,7 @@ module ActiveTsv
         class_eval <<-CODE, __FILE__, __LINE__ + 1
           def #{name}
             #{name.to_s.singularize.classify}.where(
-              "#{self.name.underscore}_id" => self[self.class.primary_key]
+              #{self.name.underscore}_id: self[self.class.primary_key]
             )
           end
         CODE
@@ -24,7 +24,7 @@ module ActiveTsv
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}
           #{name.to_s.singularize.classify}.where(
-            "#{self.name.underscore}_id" => self[self.class.primary_key]
+            #{self.name.underscore}_id: self[self.class.primary_key]
           ).first
         end
       CODE
