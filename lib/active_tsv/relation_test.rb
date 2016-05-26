@@ -57,6 +57,10 @@ module ActiveTsvRelationTest
     unless User.where.not(id: cond).map(&:name) == ["bar"]
       t.error("break where id not in #{cond}")
     end
+
+    unless User.where(id: 1..2).map(&:name) == ["ksss", "foo"]
+      t.error("break where id in #{cond}")
+    end
   end
 
   def test_where_not_support(t)

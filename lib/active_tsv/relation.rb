@@ -211,16 +211,14 @@ module ActiveTsv
             cond.values.all? do |k, v|
               case cond
               when Condition::Equal
-                case v
-                when Array
-                  v.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
+                if v.respond_to?(:to_a)
+                  v.to_a.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
                 else
                   value[key_to_value_index[k]] == v.to_s
                 end
               when Condition::NotEqual
-                case v
-                when Array
-                  !v.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
+                if v.respond_to?(:to_a)
+                  !v.to_a.any? { |vv| value[key_to_value_index[k]] == vv.to_s }
                 else
                   !(value[key_to_value_index[k]] == v.to_s)
                 end
