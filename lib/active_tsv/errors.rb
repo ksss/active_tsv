@@ -1,3 +1,4 @@
 module ActiveTsv
-  RecordNotFound = Class.new(StandardError)
+  ActiveTsvError = Class.new(StandardError)
+  RecordNotFound = Class.new(ActiveTsvError)
 end
