@@ -63,6 +63,24 @@ module ActiveTsvRelationTest
     end
   end
 
+  def test_where_unknown_column(t)
+    [
+      User.where(unknown: 1),
+      User.where.not(unknown: 1),
+    ].each do |r|
+      begin
+        r.to_a
+      rescue ActiveTsv::StatementInvalid => e
+        unless e.message == "no such column: unknown"
+          t.error("unexpected error message '#{e.message}'")
+        end
+      else
+        t.error("expect raise ActiveTsv::StatementInvalid")
+      end
+    end
+
+  end
+
   def test_where_not_support(t)
     r = User.all
     r.where_values << Struct.new(:foo).new('foo')

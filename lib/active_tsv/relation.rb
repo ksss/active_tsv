@@ -206,6 +206,7 @@ module ActiveTsv
               cond.values.all? do |k, v|
                 index = key_to_value_index[k.to_sym]
                 if v.respond_to?(:to_a)
+                raise StatementInvalid, "no such column: #{k}" unless index
                   v.to_a.any? { |vv| value[index] == vv.to_s }
                 else
                   value[index] == v.to_s
@@ -214,6 +215,7 @@ module ActiveTsv
             when Condition::NotEqual
               cond.values.all? do |k, v|
                 index = key_to_value_index[k.to_sym]
+                raise StatementInvalid, "no such column: #{k}" unless index
                 if v.respond_to?(:to_a)
                   !v.to_a.any? { |vv| value[index] == vv.to_s }
                 else
