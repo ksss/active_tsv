@@ -222,8 +222,6 @@ module ActiveTsv
                   !(value[index] == v.to_s)
                 end
               end
-            else
-              raise Condition::NotSupportError, "Dose not support condition #{cond}"
             end
           end
         end
