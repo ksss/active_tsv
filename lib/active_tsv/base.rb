@@ -105,7 +105,7 @@ module ActiveTsv
     end
 
     def ==(other)
-      super || other.instance_of?(self.class) && attributes == other.attributes
+      super || other.instance_of?(self.class) && @attrs == other.attributes
     end
     alias eql? ==
   end
