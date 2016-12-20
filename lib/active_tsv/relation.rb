@@ -67,7 +67,8 @@ module ActiveTsv
       elsif fields.one?
         to_value_a.map! { |v| v[key_to_value_index[fields.first.to_s]] }
       else
-        to_value_a.map! { |v| fields.map { |field| v[key_to_value_index[field.to_s]] } }
+        indexes = fields.map(&:to_s).map! { |field| key_to_value_index[field] }
+        to_value_a.map! { |v| v.values_at(*indexes) }
       end
     end
 
