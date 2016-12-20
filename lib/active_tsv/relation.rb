@@ -240,14 +240,13 @@ module ActiveTsv
           Ordering::Ascending.new(column.to_s)
         when Hash
           column.map do |col, direction|
-            unless Ordering::VALID_DIRECTIONS.include?(direction)
-              raise ArgumentError, %(Direction "#{direction}" is invalid. Valid directions are: #{Ordering::VALID_DIRECTIONS})
-            end
             case direction
             when :asc, :ASC, "asc", "ASC"
               Ordering::Ascending.new(col.to_s)
             when :desc, :DESC, "desc", "DESC"
               Ordering::Descending.new(col.to_s)
+            else
+              raise ArgumentError, %(Direction "#{direction}" is invalid. Valid directions are: #{Ordering::VALID_DIRECTIONS})
             end
           end
         else
