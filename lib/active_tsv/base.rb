@@ -48,7 +48,7 @@ module ActiveTsv
       end
 
       def column_names
-        @column_names ||= open { |csv| csv.gets }.map(&:to_sym)
+        @column_names ||= open { |csv| csv.gets }
       end
 
       def primary_key
@@ -89,11 +89,11 @@ module ActiveTsv
     end
 
     def [](key)
-      @attrs[key.to_sym]
+      @attrs[key.to_s]
     end
 
     def []=(key, value)
-      @attrs[key.to_sym] = value
+      @attrs[key.to_s] = value
     end
 
     def attributes

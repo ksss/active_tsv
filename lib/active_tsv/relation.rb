@@ -65,10 +65,9 @@ module ActiveTsv
       if fields.empty?
         to_value_a
       elsif fields.one?
-        field = fields.first.to_sym
-        to_value_a.map! { |v| v[key_to_value_index[field]] }
+        to_value_a.map! { |v| v[key_to_value_index[fields.first.to_s]] }
       else
-        to_value_a.map! { |v| fields.map { |field| v[key_to_value_index[field.to_sym]] } }
+        to_value_a.map! { |v| fields.map { |field| v[key_to_value_index[field.to_s]] } }
       end
     end
 
@@ -204,7 +203,7 @@ module ActiveTsv
             case cond
             when Condition::Equal
               cond.values.all? do |k, v|
-                index = key_to_value_index[k.to_sym]
+                index = key_to_value_index[k.to_s]
                 raise StatementInvalid, "no such column: #{k}" unless index
                 if v.respond_to?(:to_a)
                   v.to_a.any? { |vv| value[index] == vv.to_s }
@@ -214,7 +213,7 @@ module ActiveTsv
               end
             when Condition::NotEqual
               cond.values.all? do |k, v|
-                index = key_to_value_index[k.to_sym]
+                index = key_to_value_index[k.to_s]
                 raise StatementInvalid, "no such column: #{k}" unless index
                 if v.respond_to?(:to_a)
                   !v.to_a.any? { |vv| value[index] == vv.to_s }
@@ -237,18 +236,18 @@ module ActiveTsv
     def order_conditions(columns)
       columns.map { |column|
         case column
-        when Symbol
-          Ordering::Ascending.new(column)
+        when Symbol, String
+          Ordering::Ascending.new(column.to_s)
         when Hash
           column.map do |col, direction|
             unless Ordering::VALID_DIRECTIONS.include?(direction)
               raise ArgumentError, %(Direction "#{direction}" is invalid. Valid directions are: #{Ordering::VALID_DIRECTIONS})
             end
-            case direction.downcase.to_sym
-            when :asc
-              Ordering::Ascending.new(col)
-            when :desc
-              Ordering::Descending.new(col)
+            case direction
+            when :asc, :ASC, "asc", "ASC"
+              Ordering::Ascending.new(col.to_s)
+            when :desc, :DESC, "desc", "DESC"
+              Ordering::Descending.new(col.to_s)
             end
           end
         end
