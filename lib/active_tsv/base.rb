@@ -51,10 +51,6 @@ module ActiveTsv
         @keys ||= open { |csv| csv.gets }.map(&:to_sym)
       end
 
-      def keys=(headers)
-        @keys = headers.map(&:to_sym)
-      end
-
       def primary_key
         @primary_key ||= DEFAULT_PRIMARY_KEY
       end

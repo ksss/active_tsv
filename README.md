@@ -32,7 +32,6 @@ class User < ActiveTsv::Base
   self.table_path = "data/users.tsv"    # required
   # self.encoding = Encoding::Shift_JIS # optional
   # self.primary_key = "uid"            # optional
-  # self.keys = %w(id name age)         # optional
   has_many :nicknames
 end
 
