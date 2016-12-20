@@ -144,6 +144,13 @@ module ActiveTsvRelationTest
   end
 
   def test_order(t)
+    begin
+      User.order(Object.new)
+    rescue TypeError
+    else
+      t.error("expect raise TypeError but nothing")
+    end
+
     r = User.order(:age, :name)
     unless ActiveTsv::Relation === r
       t.error("break return value")

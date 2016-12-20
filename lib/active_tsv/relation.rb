@@ -250,6 +250,8 @@ module ActiveTsv
               Ordering::Descending.new(col.to_s)
             end
           end
+        else
+          raise TypeError, "Cannot visit #{column.class}"
         end
       }.flatten
     end
