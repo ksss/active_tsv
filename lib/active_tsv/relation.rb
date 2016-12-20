@@ -61,7 +61,7 @@ module ActiveTsv
     end
 
     def pluck(*fields)
-      key_to_value_index = @model.keys.each_with_index.to_h
+      key_to_value_index = @model.column_names.each_with_index.to_h
       if fields.empty?
         to_value_a
       elsif fields.one?
@@ -174,7 +174,7 @@ module ActiveTsv
     def to_value_a
       ret = each_value.to_a
       if @order_values.empty?.!
-        key_to_value_index = @model.keys.each_with_index.to_h
+        key_to_value_index = @model.column_names.each_with_index.to_h
         if @order_values.one?
           order_condition = @order_values.first
           index = key_to_value_index[order_condition.column]
@@ -196,7 +196,7 @@ module ActiveTsv
     def each_value
       return to_enum(__method__) unless block_given?
 
-      key_to_value_index = @model.keys.each_with_index.to_h
+      key_to_value_index = @model.column_names.each_with_index.to_h
       @model.open do |csv|
         csv.gets
         csv.each do |value|

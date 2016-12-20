@@ -20,16 +20,16 @@ module ActiveTsv
       end
 
       def reload(path)
-        if @keys
-          keys.each do |k|
+        if @column_names
+          column_names.each do |k|
             remove_method(k)
             remove_method("#{k}=")
           end
         end
 
-        @keys = nil
+        @column_names = nil
         @table_path = path
-        keys.each do |k|
+        column_names.each do |k|
           define_method(k) { @attrs[k] }
           define_method("#{k}=") { |v| @attrs[k] = v }
         end
@@ -47,8 +47,8 @@ module ActiveTsv
         CSV.open(table_path, "r:#{encoding}:UTF-8", col_sep: self::SEPARATER, &block)
       end
 
-      def keys
-        @keys ||= open { |csv| csv.gets }.map(&:to_sym)
+      def column_names
+        @column_names ||= open { |csv| csv.gets }.map(&:to_sym)
       end
 
       def primary_key
@@ -78,7 +78,7 @@ module ActiveTsv
       when Hash
         @attrs = attrs
       when Array
-        @attrs = self.class.keys.zip(attrs).to_h
+        @attrs = self.class.column_names.zip(attrs).to_h
       else
         raise ArgumentError, "#{attrs.class} is not supported value"
       end

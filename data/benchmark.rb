@@ -25,9 +25,9 @@ module ActiveHashTsv
       def load_path(path)
         data = []
         CSV.open(path, col_sep: self::SEPARATER) do |csv|
-          keys = csv.gets.map(&:to_sym)
+          column_names = csv.gets.map(&:to_sym)
           while line = csv.gets
-            data << keys.zip(line).to_h
+            data << column_names.zip(line).to_h
           end
         end
         data
