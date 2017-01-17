@@ -171,6 +171,22 @@ module ActiveTsvBaseTest
     end
   end
 
+  def test_initialize(t)
+    u = User.new(:id => 10, "name" => 20)
+    { id: 10, name: 20, age: nil }.each do |k, v|
+      unless u[k] == v
+        t.error("expect #{k}=#{v.inspect} but got #{k}=#{u[k].inspect}")
+      end
+    end
+
+    begin
+      User.new(foo: 10)
+    rescue ActiveTsv::UnknownAttributeError
+    else
+      t.error("expect raise ActiveTsv::UnknownAttributeError bot was nothing")
+    end
+  end
+
   def test_equal(t)
     unless User.first == User.first
       t.error("expect same object")

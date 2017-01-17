@@ -76,7 +76,17 @@ module ActiveTsv
     def initialize(attrs = {})
       case attrs
       when Hash
-        @attrs = attrs
+        h = {}
+        self.class.column_names.each do |name|
+          h[name] = nil
+        end
+        attrs.each do |name, v|
+          unless respond_to?("#{name}=")
+            raise UnknownAttributeError, "unknown attribute '#{name}' for #{self.class}."
+          end
+          h[name.to_s] = v
+        end
+        @attrs = h
       when Array
         @attrs = self.class.column_names.zip(attrs).to_h
       else
