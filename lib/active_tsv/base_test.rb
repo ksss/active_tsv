@@ -10,6 +10,11 @@ class Nickname < ActiveTsv::Base
   self.table_path = "data/nicknames.tsv"
 end
 
+class Nokey < ActiveTsv::Base
+  self.table_path = "data/nokeys.tsv"
+  self.column_names = %w(foo bar baz)
+end
+
 module ActiveTsvBaseTest
   def test_s_encoding=(t)
     User.encoding = Encoding::ASCII_8BIT
@@ -200,8 +205,13 @@ module ActiveTsvBaseTest
   end
 
   def test_column_names(t)
-    unless User.column_names == %w(id name age)
-      t.error(%(expect ["id", "name", "age"] but got #{User.column_names}))
+    [
+      [ User.column_names,  %w(id name age) ],
+      [ Nokey.column_names, %w(foo bar baz) ],
+    ].each do |actual, expect|
+      unless actual == expect
+        t.error("expect #{expect.inspect} but got #{actual.inspect}")
+      end
     end
   end
 end

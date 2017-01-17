@@ -28,6 +28,7 @@ module ActiveTsv
         end
 
         @column_names = nil
+        @custom_column_name = false
         @table_path = path
         column_names.each do |k|
           define_method(k) { @attrs[k] }
@@ -48,7 +49,24 @@ module ActiveTsv
       end
 
       def column_names
-        @column_names ||= open { |csv| csv.gets }
+        @column_names ||= begin
+          @custom_column_name = false
+          open { |csv| csv.gets }
+        end
+      end
+
+      def column_names=(names)
+        @custom_column_name = true
+        column_names = names.map(&:to_s)
+        column_names.each do |k|
+          define_method(k) { @attrs[k] }
+          define_method("#{k}=") { |v| @attrs[k] = v }
+        end
+        @column_names = column_names
+      end
+
+      def custom_column_name?
+        @custom_column_name
       end
 
       def primary_key

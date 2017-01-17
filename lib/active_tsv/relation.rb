@@ -198,7 +198,7 @@ module ActiveTsv
 
       key_to_value_index = @model.column_names.each_with_index.to_h
       @model.open do |csv|
-        csv.gets
+        csv.gets if !@model.custom_column_name?
         csv.each do |value|
           yield value if @where_values.all? do |cond|
             case cond

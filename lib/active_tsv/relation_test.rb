@@ -5,6 +5,11 @@ module ActiveTsvRelationTest
     self.table_path = "data/users.tsv"
   end
 
+  class Nokey < ActiveTsv::Base
+    self.table_path = "data/nokeys.tsv"
+    self.column_names = %w(foo bar baz)
+  end
+
   def test_find(t)
     unless User.find(1).name == "ksss"
       t.error("Couldn't find 'id'=1")
@@ -45,6 +50,12 @@ module ActiveTsvRelationTest
     a = r.to_a
     unless a.length == 1
       t.error("expect length 1 got #{a.length}")
+    end
+
+    r = Nokey.where(foo: 2)
+    expect = [Nokey.new(foo: "2", bar: "3", baz: "4")]
+    unless r.to_a == expect
+      t.error("expect #{expect} but got #{r.to_a}")
     end
   end
 
