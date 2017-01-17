@@ -182,4 +182,10 @@ module ActiveTsvBaseTest
       t.error("expect not equal object id")
     end
   end
+
+  def test_column_names(t)
+    unless User.column_names == %w(id name age)
+      t.error(%(expect ["id", "name", "age"] but got #{User.column_names}))
+    end
+  end
 end
