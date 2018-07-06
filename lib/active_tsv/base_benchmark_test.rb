@@ -1,5 +1,6 @@
 require 'active_tsv'
 require 'benchmark'
+require 'tempfile'
 
 module ActiveTsvBenchmarkTest
   def run_with_temp_table(n)
